@@ -6,12 +6,20 @@ MAIN.crystal = {
         x = x.mul(upgEffect('plat',4))
         x = x.mul(upgEffect('perk',8))
 
+        x = x.mul(chalEff(6))
+
+        x = x.mul(tmp.chargeEff[0]||7)
+
+        x = x.pow(upgEffect('plat',7))
+
+        if (inChal(5)) x = x.root(2)
+
         return x.floor()
     },
 }
 
 RESET.crystal = {
-    unl: _=>player.pTimes>0,
+    unl: _=>player.pTimes>0 && !player.decel,
 
     req: _=>player.level>=100,
     reqDesc: _=>`Reach Level 100 to Crystallize.`,
@@ -50,7 +58,7 @@ RESET.crystal = {
 UPGS.crystal = {
     title: "Crystal Upgrades",
 
-    unl: _=>player.pTimes > 0,
+    unl: _=>player.pTimes > 0 && !player.decel,
 
     req: _=>player.cTimes > 0,
     reqDesc: _=>`Crystallize once to unlock.`,
@@ -60,12 +68,14 @@ UPGS.crystal = {
     autoUnl: _=>hasUpgrade('auto',8),
     noSpend: _=>hasUpgrade('auto',10),
 
+    cannotBuy: _=>inChal(6),
+
     ctn: [
         {
             max: 1000,
 
             title: "Grass Value III",
-            desc: `Increase grass gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels`,
+            desc: `Increase grass gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "crystal",
             icon: ["Curr/Grass"],
@@ -175,5 +185,5 @@ UPGS.crystal = {
 
 tmp_update.push(_=>{
     tmp.crystalGain = MAIN.crystal.gain()
-    tmp.crystalGainP = upgEffect('auto',12,0)
+    tmp.crystalGainP = (upgEffect('auto',12,0)+upgEffect('gen',1,0))*upgEffect('factory',1,1)
 })
