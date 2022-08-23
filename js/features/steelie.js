@@ -144,6 +144,7 @@ RESET.steel = {
 
     title: `Steelie`,
     resetBtn: `Steelie!`,
+    hotkey: `S`,
 
     reset(force=false) {
         if (this.req()||force) {

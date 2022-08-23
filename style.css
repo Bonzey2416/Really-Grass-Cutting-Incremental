@@ -468,8 +468,9 @@ button:not(.locked):hover {
 }
 
 .milestone_ctns {
-    width: calc(100% - 4px);
-    height: calc(100% - 37px);
+    position: absolute;
+    width: calc(100% - 25px);
+    height: calc(100% - 57px);
     border: solid 2px black;
     background-color: #272727;
     overflow-y: auto;

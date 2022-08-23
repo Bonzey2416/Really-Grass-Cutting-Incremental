@@ -29,6 +29,7 @@ RESET.crystal = {
 
     title: `Crystallize`,
     resetBtn: `Crystallize`,
+    hotkey: `C`,
 
     reset(force=false) {
         if (this.req()||force) {

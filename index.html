@@ -85,17 +85,23 @@
                     </div>
                 </div>
             </div><div id="map_div_opt">
-                <button onclick="if (confirm('Are you sure you want to wipe your save?')) {wipe(true)}">Hard Reset</button>
-                <button onclick="save()">Save</button>
-                <button onclick="importy()">Import</button>
-                <button onclick="export_copy()">Export to clipboard</button>
-                <button onclick="exporty()">Export</button>
-                <button onclick="window.open('https://discord.gg/Ekp8FsSwzR')">Join Discord Server</button><br>
-                <button onclick="hideUpgOption()">Hide upgrades which is maxed/purchased: <span id="hideUpgOption">OFF</span></button><br><br>
-                Really Grass Cutting Incremental - Prototype v0.3.2 - Made by MrRedShark77<br>
-                The game inspired by <a href="https://www.roblox.com/games/9292879820">Grass Cutting Incremental</a><br>
-                <b class="red">Warning! Recommended size is 1920x1080! You may change zoom!</b><br><br>
-                Endgame: Level 850, Tier 64, 34 Grasshop; Level 30 in Anti-Realm
+                <div style="width: 100%; height: 50%;">
+					<button onclick="if (confirm('Are you sure you want to wipe your save?')) {wipe(true)}">Hard Reset</button>
+					<button onclick="save()">Save</button>
+					<button onclick="importy()">Import</button>
+					<button onclick="export_copy()">Export to clipboard</button>
+					<button onclick="exporty()">Export</button>
+					<button onclick="window.open('https://discord.gg/Ekp8FsSwzR')">Join Discord Server</button><br>
+					<button onclick="hideUpgOption()">Hide upgrades which is maxed/purchased: <span id="hideUpgOption">OFF</span></button><br><br>
+					Really Grass Cutting Incremental - Prototype v0.3.2 - Made by MrRedShark77<br>
+					The game inspired by <a href="https://www.roblox.com/games/9292879820">Grass Cutting Incremental</a><br>
+					<b class="red">Warning! Recommended size is 1920x1080! You may change zoom!</b><br><br>
+					Endgame: Level 850, Tier 64, 34 Grasshop; Level 30 in Anti-Realm
+                </div><div style="width: 100%; height: 50%;">
+					<span id="pTimes"></span><br>
+					<span id="cTimes"></span><br>
+					<span id="sTimes"></span><br>
+				</div>
             </div><div id="map_div_p">
                 <div style="width: 100%; height: 50%;">
                     <div class="upgs_div" id="upgs_div_perk"></div>
@@ -158,6 +164,10 @@
             <button id="uMap" onclick="moveMap(0,-1)" class="locked">▲</button>
             <button id="dMap" onclick="moveMap(0,1)" class="locked">▼</button>
         </div>
+		<div style="position: absolute; bottom: 5px; left: 5px;">
+			<button onclick="go_to = !go_to">Go to:</button>
+			<div id="go_to_div" style="position: absolute; left: 100%; bottom: 0; text-align: left; display: none"></div>
+		</div>
     </div>
 </body>
 </html>

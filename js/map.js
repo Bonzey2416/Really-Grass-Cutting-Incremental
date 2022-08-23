@@ -14,7 +14,7 @@ const MAP = [
     [null,null,null,null,null,null,null],
     [null,null,null,'opt',null,null,null],
     [null,null,'auto','g','pc','gh','fd'],
-    [null,null,null,'p','chal','as',null],
+    [null,null,null,'p','chal',null,'as'],
     [null,null,null,null,null,null,null],
     [null,null,null,null,null,null,null],
 ]
@@ -26,7 +26,9 @@ const MAP_UNLS = {
 	p: _ => true,
 	pc: _ => true,
 	chal: _ => player.cTimes > 0,
-	gh: _ => player.cTimes > 0
+	gh: _ => player.cTimes > 0,
+	fd: _ => player.sTimes > 0,
+	as: _ => player.sTimes > 0
 }
 
 const MAP_LOCS = {
@@ -36,7 +38,9 @@ const MAP_LOCS = {
 	p: "Upgrades",
 	pc: "Prestige",
 	chal: "Challenges",
-	gh: "Prestige"
+	gh: "Prestige",
+	fd: "Factory",
+	as: "Factory"
 }
 
 const MAP_IDS = (_=>{
@@ -80,7 +84,7 @@ el.update.map = _=>{
     tmp.el.dMap.setClasses({locked: !unlockedMap(mx,my+1)})
 }
 
-/**/
+/* EXTENSION */
 let locTimeout
 function showLoc(x) {
 	if (x == mapLoc) return
@@ -91,4 +95,48 @@ function showLoc(x) {
 
 	clearTimeout(locTimeout)
 	locTimeout = setTimeout(() => tmp.el.loc.setOpacity(0), 3000)
+}
+
+let go_to = false
+const go_to_locs = [
+	{
+		name: "Field",
+		map: [3, 3],
+		unl: _ => true,
+	}, {
+		name: "Upgrades",
+		map: [3, 4],
+		unl: _ => true,
+	}, {
+		name: "Automation",
+		map: [2, 3],
+		unl: _ => true,
+	}, {
+		name: "Prestige",
+		map: [4, 3],
+		unl: _ => player.pTimes > 0,
+	}, {
+		name: "Foundry",
+		map: [6, 3],
+		unl: _ => player.sTimes > 0,
+	}, {
+		name: "Settings",
+		map: [3, 2],
+		unl: _ => true,
+	}
+]
+
+el.setup.go_to = _ => {
+	let html = ""
+	for (const [index, data] of Object.entries(go_to_locs)) {
+		html += `<button id="btn_goto${index}" onclick="switchMap(${data.map})">${data.name}</button>`
+	}
+	new Element("go_to_div").setHTML(html)
+}
+
+el.update.go_to = _ => {
+	tmp.el.go_to_div.setDisplay(go_to)
+	if (go_to) {		
+		for (const [index, data] of Object.entries(go_to_locs)) tmp.el["btn_goto"+index].setDisplay(data.unl())
+	}
 }

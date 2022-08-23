@@ -11,6 +11,7 @@ function createGrass() {
             x: Math.random(),
             y: Math.random(),
             pl: Math.random()<tmp.platChance&&player.tier>=3,
+            tier: player.tier
         })
     }
 }
@@ -63,7 +64,7 @@ function drawGrass() {
         let g = gs[i]
 
         if (g) {
-            grass_ctx.fillStyle = g.pl?"#DDD":"#00AF00"
+            grass_ctx.fillStyle = g.pl?"#DDD":grassColor(g.tier)
 
             let [x,y] = [Math.min(grass_canvas.width*g.x,grass_canvas.width-G_SIZE),Math.min(grass_canvas.height*g.y,grass_canvas.height-G_SIZE)]
 
@@ -106,4 +107,28 @@ function grassCanvas() {
             mouse_in = false
         })
     }
+}
+
+const BASE_COLORS = [null, "#00AF00", "#7FBF7F", "#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#00FFFF", "#0000FF", "#7F00FF", "#FF00FF"]
+function grassColor(tier = 1) {
+	if (tier >= BASE_COLORS.length) return  hueBright((tier * 40) % 360, 0.25 + 0.5 * Math.sin(tier / 100))
+	return BASE_COLORS[tier]
+}
+
+function hueBright(hue, brightness) {
+	let rgb
+
+	if (hue > 300) rgb = [1, 0, (360 - hue) / 60]
+	else if (hue > 240) rgb = [(hue - 240) / 60, 0, 1]
+	else if (hue > 180) rgb = [0, (240 - hue) / 60, 1]
+	else if (hue > 120) rgb = [0, 1, (hue - 120) / 60]
+	else if (hue > 60) rgb = [(120 - hue) / 60, 1, 0]
+	else rgb = [1, hue / 60, 0]
+	rgb = [
+		Math.round(255 * (brightness + rgb[0] * (1 - brightness))),
+		Math.round(255 * (brightness + rgb[1] * (1 - brightness))),
+		Math.round(255 * (brightness + rgb[2] * (1 - brightness)))
+	]
+
+	return `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
 }

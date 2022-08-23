@@ -69,6 +69,7 @@ RESET.gh = {
 
     title: `Grasshop`,
     resetBtn: `Grasshop!`,
+    hotkey: `G`,
 
     reset(force=false) {
         if ((this.req()&&player.level>=tmp.gh_req)||force) {

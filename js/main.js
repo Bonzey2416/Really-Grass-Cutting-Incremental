@@ -238,3 +238,20 @@ tmp_update.push(_=>{
     tmp.platChance = 0.005
     if (player.grasshop >= 6) tmp.platChance *= 2
 })
+
+window.addEventListener('keydown', function(event) {
+	switch (event.key) {
+		case "p":
+			RESET.pp.reset();
+			break;
+		case "c":
+			RESET.crystal.reset();
+			break;
+		case "g":
+			RESET.gh.reset();
+			break;
+		case "s":
+			RESET.steel.reset();
+			break;
+	}
+}, false);

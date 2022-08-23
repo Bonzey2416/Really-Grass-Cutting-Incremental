@@ -1021,5 +1021,10 @@ el.update.upgs = _=>{
     }
     if (mapID == 'as') updateUpgradesHTML('assembler')
 
-    if (mapID == 'opt') tmp.el.hideUpgOption.setTxt(player.options.hideUpgOption?"ON":"OFF")
+	if (mapID == 'opt') {
+		tmp.el.hideUpgOption.setTxt(player.options.hideUpgOption?"ON":"OFF")
+		tmp.el.pTimes.setTxt(player.pTimes ? "You have done " + player.pTimes + " Prestige resets." : "")
+		tmp.el.cTimes.setTxt(player.cTimes ? "You have done " + player.cTimes + " Crystalize resets." : "")
+		tmp.el.sTimes.setTxt(player.sTimes ? "You have done " + player.sTimes + " Steelie resets." : "")
+	}
 }

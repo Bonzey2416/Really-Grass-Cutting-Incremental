@@ -30,6 +30,7 @@ RESET.pp = {
 
     title: `Prestige`,
     resetBtn: `Prestige`,
+    hotkey: `P`,
 
     reset(force=false) {
         if (this.req()||force) {
