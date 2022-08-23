@@ -33,7 +33,7 @@ const MAIN = {
 
         return x
     },
-    grassSpwan() {
+    grassSpawn() {
         let x = 2.5
         x /= upgEffect('grass',2,1)
         x /= upgEffect('perk',2,1)
@@ -168,7 +168,7 @@ el.update.main = _=>{
 
 tmp_update.push(_=>{
     tmp.grassCap = MAIN.grassCap()
-    tmp.grassSpawn = MAIN.grassSpwan()
+    tmp.grassSpawn = MAIN.grassSpawn()
     tmp.rangeCut = MAIN.rangeCut()
     tmp.autocut = MAIN.autoCut()
 
