@@ -45,6 +45,7 @@ RESET.crystal = {
     },
 
     doReset(order="c") {
+        player.cTime = 0
         player.pp = E(0)
         player.bestPP = E(0)
         player.tp = E(0)

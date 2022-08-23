@@ -759,6 +759,43 @@ function buyUpgrade(id,x) {
     }
 }
 
+function buyNextUpgrade(id,x) {
+	let tu = tmp.upgs[id]
+
+	if (tu.cannotBuy) return
+
+	let upg = UPGS[id].ctn[x]
+	let resDis = upg.res
+	let res = tmp.upg_res[resDis]
+
+	let numInc = isResNumber.includes(resDis)
+
+	let costOnce = upg.costOnce
+
+	let res2 = res
+	let amt = player.upgs[id]
+	let amt2 = amt[x]||0
+
+	if (amt2 < tu.max[x] && Decimal.gte(res2,tu.cost[x])) {
+		let bulk = Math.min(tu.bulk[x], Math.ceil((amt2 + 1) / 25) * 25)
+
+		if (costOnce ? true : bulk > amt2) {
+			let [p,q] = UPG_RES[resDis][1]()
+			let cost = costOnce ? tu.cost[x] * (bulk - amt2) : upg.cost(bulk-1)
+
+			amt[x] = Math.min(amt[x] ? costOnce ? amt[x]+bulk : Math.max(amt[x],bulk) : bulk,tu.max[x])
+			if (resDis == 'perk') {
+				player.spentPerk += cost
+				tmp.perkUnspent = Math.max(player.maxPerk-player.spentPerk,0)
+			}
+			else if (!tu.noSpend) p[q] = numInc ? Math.max(p[q]-cost,0) : p[q].sub(cost).max(0)
+
+			updateUpgResource(resDis)
+			updateUpgTemp(id)
+		}
+	}
+}
+
 function buyMaxUpgrade(id,x,auto=false) {
     let tu = tmp.upgs[id]
 
@@ -784,7 +821,7 @@ function buyMaxUpgrade(id,x,auto=false) {
 
             if (costOnce ? true : bulk > amt2) {
                 let [p,q] = UPG_RES[resDis][1]()
-                let cost = costOnce ? tu.cost[x]*(Math.min(amt2+bulk,tu.max[x])-amt2) : upg.cost(bulk-1)
+                let cost = costOnce ? tu.cost[x] * (bulk - amt2) : upg.cost(bulk-1)
 
                 amt[x] = Math.min(amt[x] ? costOnce ? amt[x]+bulk : Math.max(amt[x],bulk) : bulk,tu.max[x])
                 if (resDis == 'perk') {
@@ -856,8 +893,9 @@ function setupUpgradesHTML(id) {
             <div id="upg_desc_${id}"></div>
             <div style="position: absolute; bottom: 0; width: 100%;">
                 <button onclick="tmp.upg_ch.${id} = -1">Cancel</button>
-                <button onclick="buyUpgrade('${id}',tmp.upg_ch.${id})">Buy 1</button>
-                <button onclick="buyMaxUpgrade('${id}',tmp.upg_ch.${id})">Buy Max</button>
+                <button id="upg_buy_${id}" onclick="buyUpgrade('${id}',tmp.upg_ch.${id})">Buy 1</button>
+                <button id="upg_buy_next_${id}" onclick="buyNextUpgrade('${id}',tmp.upg_ch.${id})">Buy Next</button>
+                <button id="upg_buy_max_${id}" onclick="buyMaxUpgrade('${id}',tmp.upg_ch.${id})">Buy Max</button>
             </div>
         </div>
         <div id="upg_req_div_${id}" class="upg_desc ${id}">
@@ -884,6 +922,7 @@ function setupUpgradesHTML(id) {
             html += `
                 <div id="upg_ctn_${id}${x}_cost" class="upg_cost"></div>
                 <div id="upg_ctn_${id}${x}_amt" class="upg_amt">argh</div>
+                <div id="upg_ctn_${id}${x}_max" class="upg_max">Maxed!</div>
             </div>
             `
         }
@@ -917,7 +956,7 @@ function updateUpgradesHTML(id) {
                 let dis = UPG_RES[upg.res][0]
 
                 let h = `
-                [#${ch}] <h2>${upg.title}</h2><br>
+                [#${ch+1}] <h2>${upg.title}</h2><br>
                 Level <b class="yellow">${format(amt,0)}${tu.max[ch] < Infinity ? ` / ${format(tu.max[ch],0)}` : ""}</b><br>
                 ${upg.desc}
                 `
@@ -926,15 +965,19 @@ function updateUpgradesHTML(id) {
 
                 if (amt < tu.max[ch]) {
                     let cost2 = upg.costOnce?Decimal.mul(tu.cost[ch],25):upg.cost((Math.floor(amt/25)+1)*25-1)//upg.cost(amt+25)
-                    
+
+                    if (tu.max[ch] >= 25) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} ${dis}</span>`
                     h += `
-                    <br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} ${dis}</span>
                     <br><span class="${Decimal.gte(tmp.upg_res[upg.res],tu.cost[ch])?"green":"red"}">Cost: ${format(tu.cost[ch],0)} ${dis}</span>
                     <br>You have ${format(res,0)} ${dis}
                     `
-                }
+                } else h += "<br><b class='lavender'>Maxed!</b>"
 
                 tmp.el["upg_desc_"+id].setHTML(h)
+                tmp.el["upg_buy_"+id].setClasses({ locked: Decimal.lt(tmp.upg_res[upg.res],tu.cost[ch]) })
+                tmp.el["upg_buy_next_"+id].setClasses({ locked: Decimal.lt(tmp.upg_res[upg.res],tu.cost[ch]) })
+                tmp.el["upg_buy_max_"+id].setClasses({ locked: Decimal.lt(tmp.upg_res[upg.res],tu.cost[ch]) })
+                tmp.el["upg_buy_next_"+id].setDisplay(tu.max[ch] >= 25)
             }
 
             if (ch < 0) {
@@ -956,12 +999,11 @@ function updateUpgradesHTML(id) {
                     tmp.el[div_id].changeStyle("width",height+"px")
                     tmp.el[div_id].changeStyle("height",height+"px")
 
-                    tmp.el[div_id+"_cost"].setTxt(amt < tu.max[x] ? format(tu.cost[x],0,6)+" "+UPG_RES[upg.res][0] : "Maxed")
+                    tmp.el[div_id+"_cost"].setTxt(amt < tu.max[x] ? format(tu.cost[x],0,6)+" "+UPG_RES[upg.res][0] : "")
                     tmp.el[div_id+"_cost"].setClasses({upg_cost: true, locked: Decimal.lt(res,tu.cost[x]) && amt < tu.max[x]})
-                    //tmp.el[div_id+"_cost"].changeStyle("font-size",(tmp.el[div_id+"_cost"].el.offsetHeight-4)+"px")
 
-                    tmp.el[div_id+"_amt"].setTxt(format(amt,0))
-                    //tmp.el[div_id+"_amt"].changeStyle("font-size",(tmp.el[div_id+"_amt"].el.offsetHeight-4)+"px")
+                    tmp.el[div_id+"_amt"].setTxt(amt < tu.max[x] ? format(amt,0) : "")
+                    tmp.el[div_id+"_max"].setDisplay(amt >= tu.max[x])
                 }
             }
         } else if (upgs.reqDesc) tmp.el["upg_req_desc_"+id].setHTML(upgs.reqDesc())
@@ -1023,8 +1065,9 @@ el.update.upgs = _=>{
 
 	if (mapID == 'opt') {
 		tmp.el.hideUpgOption.setTxt(player.options.hideUpgOption?"ON":"OFF")
-		tmp.el.pTimes.setTxt(player.pTimes ? "You have done " + player.pTimes + " Prestige resets." : "")
-		tmp.el.cTimes.setTxt(player.cTimes ? "You have done " + player.cTimes + " Crystalize resets." : "")
-		tmp.el.sTimes.setTxt(player.sTimes ? "You have done " + player.sTimes + " Steelie resets." : "")
+		tmp.el.grassCap.setTxt(player.options.lowGrass?250:"Unlimited")
+		tmp.el.pTimes.setHTML(player.pTimes ? "You have done " + player.pTimes + " <b style='color: #5BFAFF'>Prestige</b> resets.<br>Time: " + formatTime(player.pTime) : "")
+		tmp.el.cTimes.setHTML(player.cTimes ? "You have done " + player.cTimes + " <b style='color: #FF84F6'>Crystalize</b> resets.<br>Time: " + formatTime(player.cTime) : "")
+		tmp.el.sTimes.setHTML(player.sTimes ? "You have done " + player.sTimes + " <b style='color: #c5c5c5'>Steelie</b> resets.<br>Time: " + formatTime(player.sTime) : "")
 	}
 }

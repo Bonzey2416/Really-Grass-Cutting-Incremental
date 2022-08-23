@@ -36,6 +36,7 @@ const MAIN = {
     },
     grassCap() {
         let x = 10+upgEffect('grass',1,0)+upgEffect('perk',1,0)
+        if (player.options.lowGrass) x = Math.min(x, 250)
 
         return x
     },
@@ -169,10 +170,14 @@ el.update.main = _=>{
 
     let tier_unl = player.pTimes > 0
 
-    tmp.el.level.setHTML(`Level <b class="cyan">${format(player.level,0)}</b> (${formatPercent(tmp.level.percent)})`)
+    tmp.el.level_top_bar.changeStyle("width",tmp.level.percent*100+"%")
+    tmp.el.level_top_info.setHTML(`Level <b class="cyan">${format(player.level,0)}</b> (${formatPercent(tmp.level.percent)})`)
 
     tmp.el.tier.setDisplay(tier_unl)
-    if (tier_unl) tmp.el.tier.setHTML(`Tier <b class="yellow">${format(player.tier,0)}</b> (${formatPercent(tmp.tier.percent)})`)
+    if (tier_unl) {
+        tmp.el.tier_top_bar.changeStyle("width",tmp.tier.percent*100+"%")
+        tmp.el.tier_top_info.setHTML(`Tier <b class="yellow">${format(player.tier,0)}</b> (${formatPercent(tmp.tier.percent)})`)
+    }
 
     if (mapID == 'g') {
         tmp.el.level_amt.setTxt(format(player.level,0))

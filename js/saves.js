@@ -83,10 +83,12 @@ function getPlayerData() {
         pp: E(0),
         bestPP: E(0),
         pTimes: 0,
+        pTime: 0,
 
         crystal: E(0),
         bestCrystal: E(0),
         cTimes: 0,
+        cTime: 0,
 
         options: {
             hideUpgOption: false
@@ -263,6 +265,7 @@ function loadGame(start=true, gotNaN=false) {
         for (let x = 0; x < 50; x++) updateTemp()
         //for (let x = 0; x < 10; x++) createGrass()
         grassCanvas()
+        tmp.el.loading.el.remove()
         setInterval(save,60000)
         setInterval(loop, 100/3)
         setInterval(checkNaN,1000)

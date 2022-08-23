@@ -46,6 +46,7 @@ RESET.pp = {
     },
 
     doReset(order="p") {
+        player.pTime = 0
         player.grass = E(0)
         player.bestGrass = E(0)
         player.xp = E(0)
