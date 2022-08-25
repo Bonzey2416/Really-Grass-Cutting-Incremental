@@ -119,9 +119,16 @@ function getPlayerData() {
             tier: 0,
             tp: E(0),
         },
+        
         ap: E(0),
+        bestAP: E(0),
         aTimes: 0,
         aTime: 0,
+
+        oil: E(0),
+        bestOil: E(0),
+        lTimes: 0,
+        lTime: 0,
 
         time: 0,
     }

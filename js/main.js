@@ -24,8 +24,8 @@ const MAIN = {
         }
 
         x = x.mul(upgEffect('aGrass',3))
-
         x = x.mul(upgEffect('ap',0))
+        x = x.mul(upgEffect('oil',0))
 
         if (player.decel) x = x.div(1e15)
 
@@ -67,6 +67,7 @@ const MAIN = {
 
         x = x.mul(upgEffect('aGrass',4))
         x = x.mul(upgEffect('ap',2))
+        x = x.mul(upgEffect('oil',1))
 
         if (player.decel) x = x.div(1e16)
 
@@ -93,6 +94,7 @@ const MAIN = {
         }
 
         x = x.mul(upgEffect('ap',3))
+        x = x.mul(upgEffect('oil',2))
 
         if (player.decel) x = x.div(1e16)
 
@@ -244,6 +246,9 @@ tmp_update.push(_=>{
 
     tmp.platGain = 1
     if (player.grasshop >= 4) tmp.platGain += getGHEffect(3)
+
+    tmp.platGain *= upgEffect('oil',4,1)
+    tmp.platGain = Math.ceil(tmp.platGain)
 
     tmp.platChance = 0.005
     if (player.grasshop >= 6) tmp.platChance *= 2

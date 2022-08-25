@@ -9,6 +9,7 @@ const UPG_RES = {
     steel: ["Steel",_=>[player,"steel"],"GrasshopBase"],
     aGrass: ["Anti-Grass",_=>[player,"aGrass"],'AntiGrassBase'],
     ap: ["AP",_=>[player,"ap"],'AnonymityBase'],
+    oil: ["Oil",_=>[player,"oil"],'LiquefyBase'],
 }
 
 const isResNumber = ['perk','plat']
@@ -532,6 +533,28 @@ const UPGS = {
                             
                 cost: i => E(100),
                 bulk: i => 1,
+            },{
+                unl: _=>player.lTimes>0,
+
+                title: "Anonymity Upgrades Autobuy",
+                desc: `You can now automatically buy Anonymity Upgrades.`,
+            
+                res: "oil",
+                icon: ['Curr/Anonymity','Icons/Automation'],
+                            
+                cost: i => E(100),
+                bulk: i => 1,
+            },{
+                unl: _=>player.lTimes>0,
+
+                title: "Anti-Grass Upgrades EL",
+                desc: `Anti-Grass Upgrades no longer spend AP.`,
+            
+                res: "oil",
+                icon: ['Curr/Grass','Icons/Infinite'],
+                            
+                cost: i => E(1000),
+                bulk: i => 1,
             },
         ],
     },
@@ -738,6 +761,28 @@ const UPGS = {
                     return x
                 },
                 effDesc: x => format(x)+"x",
+            },{
+                max: 100,
+
+                unl: _=>player.lTimes>0,
+
+                costOnce: true,
+
+                title: "Platinum Oil",
+                desc: `Increase Oil gain by <b class="green">+20%</b> per level.`,
+
+                res: "plat",
+                icon: ['Curr/Oil'],
+                
+                cost: i => 25000,
+                bulk: i => Math.floor(i/25000),
+
+                effect(i) {
+                    let x = E(i*0.2+1)
+
+                    return x
+                },
+                effDesc: x => format(x)+"x",
             },
         ],
     },
@@ -767,32 +812,6 @@ const UPGS = {
 
 const UPGS_SCOST = {}
 
-function buyUpgrade(id,x) {
-    let tu = tmp.upgs[id]
-
-    if (tu.cannotBuy) return
-
-    let upg = UPGS[id].ctn[x]
-    let resDis = upg.res
-    let res = tmp.upg_res[resDis]
-    let amt = player.upgs[id]
-
-    if ((amt[x]||0) < tu.max[x]) if (Decimal.gte(res,tu.cost[x])) {
-        let [p,q] = UPG_RES[resDis][1]()
-
-        if (resDis == 'perk') {
-            player.spentPerk += tu.cost[x]
-            tmp.perkUnspent = Math.max(player.maxPerk-player.spentPerk,0)
-        }
-        else if (!tu.noSpend) p[q] = isResNumber.includes(resDis) ? Math.max(p[q]-tu.cost[x],0) : p[q].sub(tu.cost[x]).max(0)
-        amt[x] = amt[x] ? amt[x] + 1 : 1
-
-        updateUpgResource(resDis)
-
-        updateUpgTemp(id)
-    }
-}
-
 function buyUpgrade(id, x, type = "once") {
 	let tu = tmp.upgs[id]
 	if (tu.cannotBuy) return
@@ -815,12 +834,14 @@ function buyUpgrade(id, x, type = "once") {
 	if (type == "next") bulk = Math.min(bulk, Math.ceil((amt + 1) / 25) * 25)
 	if (type == "once") bulk = amt + 1
 	else bulk = Math.floor(bulk)
+	bulk = Math.min(bulk, tu.max[x])
+
 	if (amt >= bulk) return
 
 	let [p,q] = UPG_RES[resDis][1]()
 	let cost = costOnce ? tu.cost[x] * (bulk - amt) : upg.cost(bulk-1)
 
-	upgData[x] = Math.min(bulk, tu.max[x])
+	upgData[x] = bulk
 	if (resDis == 'perk') {
 		player.spentPerk += cost
 		tmp.perkUnspent = Math.max(player.maxPerk-player.spentPerk,0)
@@ -969,7 +990,7 @@ function updateUpgradesHTML(id) {
                 if (upg.effDesc) h += '<br>Effect: <span class="cyan">'+upg.effDesc(tu.eff[ch])+"</span>"
 
                 if (amt < tu.max[ch]) {
-                    let cost2 = upg.costOnce?Decimal.mul(tu.cost[ch],25):upg.cost((Math.floor(amt/25)+1)*25-1)//upg.cost(amt+25)
+                    let cost2 = upg.costOnce?Decimal.mul(tu.cost[ch],25-amt%25):upg.cost((Math.floor(amt/25)+1)*25-1)//upg.cost(amt+25)
 
                     if (tu.max[ch] >= 25) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} ${dis}</span>`
                     h += `
@@ -1062,6 +1083,7 @@ el.update.upgs = _=>{
         updateUpgradesHTML('crystal')
 
         updateUpgradesHTML('ap')
+        updateUpgradesHTML('oil')
     }
     if (mapID == 'gh') updateUpgradesHTML('factory')
     if (mapID == 'fd') {
@@ -1083,6 +1105,7 @@ el.update.upgs = _=>{
 			tmp.el.sTimes.setHTML(player.sTimes ? "You have done " + player.sTimes + " <b style='color: #c5c5c5'>Steelie</b> resets.<br>Time: " + formatTime(player.sTime) : "")
 		} else {
 			tmp.el.aTimes.setHTML(player.aTimes ? "You have done " + player.aTimes + " <b style='color: #FF4E4E'>Anonymity</b> resets.<br>Time: " + formatTime(player.aTime) : "")
+			tmp.el.aTimes.setHTML(player.lTimes ? "You have done " + player.lTimes + " <b style='color: #2b2b2b'>Liquefy</b> resets.<br>Time: " + formatTime(player.lTime) : "")
 		}
 	}
 }
