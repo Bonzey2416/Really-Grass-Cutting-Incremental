@@ -210,6 +210,7 @@ RESET.oil = {
 
     title: `Liquefy`,
     resetBtn: `Liquefy`,
+    hotkey: `L`,
 
     reset(force=false) {
         if (this.req()||force) {

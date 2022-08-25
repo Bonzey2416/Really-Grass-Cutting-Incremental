@@ -271,5 +271,8 @@ window.addEventListener('keydown', function(event) {
 		case "a":
 			RESET.ap.reset();
 			break;
+		case "l":
+			RESET.oil.reset();
+			break;
 	}
 }, false);

@@ -185,6 +185,7 @@ RESET.ap = {
     },
 
     doReset(order="a") {
+        player.aTime = 0
         player.aGrass = E(0)
         player.aBestGrass = E(0)
         player.xp = E(0)
