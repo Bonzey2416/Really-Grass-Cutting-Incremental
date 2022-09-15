@@ -130,6 +130,11 @@ function getPlayerData() {
         lTimes: 0,
         lTime: 0,
 
+        rocket: {
+            total_fp: 0,
+            amount: 0,
+        },
+
         time: 0,
     }
     for (let x in UPGS) {
