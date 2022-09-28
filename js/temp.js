@@ -36,6 +36,8 @@ function resetTemp() {
 
         ghRunning: false,
         ghEffect: [],
+
+        map_notify: {},
     }
 
     for (let x in UPG_RES) tmp.upg_res[x] = E(0)

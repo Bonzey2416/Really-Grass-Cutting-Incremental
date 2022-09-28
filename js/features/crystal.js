@@ -80,6 +80,7 @@ UPGS.crystal = {
             max: 1000,
 
             title: "Grass Value III",
+            tier: 3,
             desc: `Increase grass gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "crystal",
@@ -98,6 +99,7 @@ UPGS.crystal = {
             max: 1000,
 
             title: "XP III",
+            tier: 3,
             desc: `Increase XP gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "crystal",
@@ -116,6 +118,7 @@ UPGS.crystal = {
             max: 1000,
 
             title: "TP II",
+            tier: 2,
             desc: `Increase Tier Points (TP) gain by <b class="green">1</b> per level. This effect is <b class="green">doubled</b> for every <b class="yellow">25</b> levels.`,
         
             res: "crystal",
@@ -264,6 +267,7 @@ UPGS.oil = {
             max: 1000,
 
             title: "Oily Grass Value",
+            tier: 6,
             desc: `Increase grass gain by <b class="green">+25%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "oil",
@@ -282,6 +286,7 @@ UPGS.oil = {
             max: 1000,
 
             title: "Oily XP",
+            tier: 6,
             desc: `Increase XP gain by <b class="green">+25%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "oil",
@@ -300,6 +305,7 @@ UPGS.oil = {
             max: 1000,
 
             title: "Oily TP",
+            tier: 4,
             desc: `Increase TP gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "oil",
@@ -354,6 +360,7 @@ UPGS.oil = {
             max: 1000,
 
             title: "Oily Steel",
+            tier: 2,
             desc: `Increase steel gain by <b class="green">+25%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "oil",

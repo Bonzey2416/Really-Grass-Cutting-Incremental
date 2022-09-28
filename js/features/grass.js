@@ -58,7 +58,7 @@ function drawGrass() {
         grass_ctx.fillRect(range_pos.x,range_pos.y,tmp.rangeCut,tmp.rangeCut)
     }
 
-    grass_ctx.strokeStyle = "black"
+    grass_ctx.strokeStyle = "#0003"
 
     for (let i = 0; i < gs.length; i++) {
         let g = gs[i]

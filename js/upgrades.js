@@ -124,6 +124,7 @@ const UPGS = {
     },
     perk: {
         title: "Perk Upgrades",
+        btns: `<button id="losePerksBtn" class="buyAllUpg" onclick='toggleOption("losePerks")'>Keep on reset: <span id="losePerks"></span></button>`,
 
         req: _=>player.level >= 1 || player.pTimes > 0,
         reqDesc: _=>`Reach Level 1 to unlock.`,
@@ -967,62 +968,64 @@ function updateUpgTemp(id) {
     tu.unlLength = ul
 }
 
+
 function setupUpgradesHTML(id) {
-    let table = new Element("upgs_div_"+id)
+	let table = new Element("upgs_div_"+id)
 
-    if (table.el) {
-        let upgs = UPGS[id]
-        let html = ""
+	if (table.el) {
+		let upgs = UPGS[id]
+		let html = ""
 
-        table.addClass(id)
+		table.addClass(id)
 
-        html += `
-        <div style="height: 40px;">
-            ${upgs.title} <button class="buyAllUpg" onclick="buyMaxUpgrades('${id}')">Buy All</button><button class="buyAllUpg" id="upg_auto_${id}" onclick="switchAutoUpg('${id}')">Auto: OFF</button>
-        </div><div id="upgs_ctn_${id}" class="upgs_ctn">
-        </div><div style="height: 40px;" id="upg_under_${id}">
-            
-        </div>
-        <div id="upg_desc_div_${id}" class="upg_desc ${id}">
-            <div id="upg_desc_${id}"></div>
-            <div style="position: absolute; bottom: 0; width: 100%;">
-                <button onclick="tmp.upg_ch.${id} = -1">Cancel</button>
-                <button id="upg_buy_${id}" onclick="buyUpgrade('${id}',tmp.upg_ch.${id})">Buy 1</button>
-                <button id="upg_buy_next_${id}" onclick="buyNextUpgrade('${id}',tmp.upg_ch.${id})">Buy Next</button>
-                <button id="upg_buy_max_${id}" onclick="buyMaxUpgrade('${id}',tmp.upg_ch.${id})">Buy Max</button>
-            </div>
-        </div>
-        <div id="upg_req_div_${id}" class="upg_desc ${id}">
-            <div id="upg_req_desc_${id}" style="position:absolute;top:50%;width: 100%;transform:translateY(-50%);font-size:30px;"></div>
-        </div>
-        `
+		html += `
+			<div style="height: 40px;">
+				${upgs.title} <button class="buyAllUpg" onclick="buyMaxUpgrades('${id}')">Buy All</button><button class="buyAllUpg" id="upg_auto_${id}" onclick="switchAutoUpg('${id}')">Auto: OFF</button> ${upgs.btns ?? ''}
+			</div><div id="upgs_ctn_${id}" class="upgs_ctn">
 
-        table.setHTML(html)
+			</div><div style="height: 40px;" id="upg_under_${id}">
 
-        let height = document.getElementById(`upgs_ctn_${id}`).offsetHeight-25
+			</div>
+			<div id="upg_desc_div_${id}" class="upg_desc ${id}">
+				<div id="upg_desc_${id}"></div>
+				<div style="position: absolute; bottom: 0; width: 100%;">
+					<button onclick="tmp.upg_ch.${id} = -1">Cancel</button>
+					<button id="upg_buy_${id}" onclick="buyUpgrade('${id}',tmp.upg_ch.${id})">Buy 1</button>
+					<button id="upg_buy_next_${id}" onclick="buyNextUpgrade('${id}',tmp.upg_ch.${id})">Buy Next</button>
+					<button id="upg_buy_max_${id}" onclick="buyMaxUpgrade('${id}',tmp.upg_ch.${id})">Buy Max</button>
+				</div>
+			</div>
+			<div id="upg_req_div_${id}" class="upg_desc ${id}">
+				<div id="upg_req_desc_${id}" style="position:absolute;top:50%;width: 100%;transform:translateY(-50%);font-size:30px;"></div>
+			</div>
+		`
 
-        html = ""
+		table.setHTML(html)
 
-        for (let x in UPGS[id].ctn) {
-            let upg = UPGS[id].ctn[x]
-            let icon = [id=='auto'&&x==0?'Bases/AutoBase':'Bases/'+UPG_RES[upg.res][2]]
-            if (upg.icon) for (i in upg.icon) icon.push(upg.icon[i])
-            else icon.push('Icons/Placeholder')
+		html = ""
 
-            html += `
-            <div class="upg_ctn" id="upg_ctn_${id}${x}" style="width: ${height}px; height: ${height}px;" onclick="tmp.upg_ch.${id} = ${x}">`
-            for (i in icon) html +=
-                `<img draggable="false" src="${"images/"+icon[i]+".png"}">`
-            html += `
-                <div id="upg_ctn_${id}${x}_cost" class="upg_cost"></div>
-                <div id="upg_ctn_${id}${x}_amt" class="upg_amt">argh</div>
-                <div id="upg_ctn_${id}${x}_max" class="upg_max">Maxed!</div>
-            </div>
-            `
-        }
+		for (let x in UPGS[id].ctn) {
+			let upg = UPGS[id].ctn[x]
+			let icon = [id=='auto'&&x==0?'Bases/AutoBase':'Bases/'+UPG_RES[upg.res][2]]
+			if (upg.icon) for (i in upg.icon) icon.push(upg.icon[i])
+			else icon.push('Icons/Placeholder')
 
-        new Element(`upgs_ctn_${id}`).setHTML(html)
-    }
+			html += `
+				<div class="upg_ctn" id="upg_ctn_${id}${x}" onclick="tmp.upg_ch.${id} = ${x}">`
+			for (i in icon) html +=
+				`<img draggable="false" src="${"images/"+icon[i]+".png"}">`
+			html += `
+				<img id="upg_ctn_${id}${x}_max_base"  draggable="false" src="${"images/max.png"}">
+				<div id="upg_ctn_${id}${x}_cost" class="upg_cost"></div>
+				<div class="upg_tier">${upg.tier ? upg.tier : ""}</div>
+				<div id="upg_ctn_${id}${x}_amt" class="upg_amt">argh</div>
+				<div class="upg_max" id="upg_ctn_${id}${x}_max" class="upg_max">Maxed!</div>
+			</div>
+			`
+		}
+
+		new Element(`upgs_ctn_${id}`).setHTML(html)
+	}
 }
 
 function updateUpgradesHTML(id) {
@@ -1064,7 +1067,7 @@ function updateUpgradesHTML(id) {
                     <br><span class="${Decimal.gte(tmp.upg_res[upg.res],tu.cost[ch])?"green":"red"}">Cost: ${format(tu.cost[ch],0)} ${dis}</span>
                     <br>You have ${format(res,0)} ${dis}
                     `
-                } else h += "<br><b class='lavender'>Maxed!</b>"
+                } else h += "<br><b class='pink'>Maxed!</b>"
 
                 tmp.el["upg_desc_"+id].setHTML(h)
                 tmp.el["upg_buy_"+id].setClasses({ locked: Decimal.lt(tmp.upg_res[upg.res],tu.cost[ch]) })
@@ -1082,7 +1085,7 @@ function updateUpgradesHTML(id) {
                     let div_id = "upg_ctn_"+id+x
                     let amt = player.upgs[id][x]||0
 
-                    let unlc = (upg.unl?upg.unl():true) && (player.options.hideUpgOption?amt < tu.max[x]:true)
+                    let unlc = (upg.unl?upg.unl():true) && (player.options.hideUpgOption ? amt < tu.max[x] : true)
                     tmp.el[div_id].setDisplay(unlc)
 
                     if (!unlc) continue
@@ -1092,11 +1095,12 @@ function updateUpgradesHTML(id) {
                     tmp.el[div_id].changeStyle("width",height+"px")
                     tmp.el[div_id].changeStyle("height",height+"px")
 
-                    tmp.el[div_id+"_cost"].setTxt(amt < tu.max[x] ? format(tu.cost[x],0,6)+" "+UPG_RES[upg.res][0] : "")
+                    tmp.el[div_id+"_cost"].setTxt(amt < tu.max[x] ? format(tu.cost[x],0)+" "+UPG_RES[upg.res][0] : "")
                     tmp.el[div_id+"_cost"].setClasses({upg_cost: true, locked: Decimal.lt(res,tu.cost[x]) && amt < tu.max[x]})
 
                     tmp.el[div_id+"_amt"].setTxt(amt < tu.max[x] ? format(amt,0) : "")
                     tmp.el[div_id+"_max"].setDisplay(amt >= tu.max[x])
+                    tmp.el[div_id+"_max_base"].setDisplay(amt >= tu.max[x])
                 }
             }
         } else if (upgs.reqDesc) tmp.el["upg_req_desc_"+id].setHTML(upgs.reqDesc())
@@ -1124,7 +1128,7 @@ function updateUpgResource(id) {
     tmp.upg_res[id] = p[q]
 }
 
-function hideUpgOption() { player.options.hideUpgOption = !player.options.hideUpgOption }
+function toggleOption(x) { player.options[x] = !player.options[x] }
 
 tmp_update.push(_=>{
     for (let x in UPG_RES) updateUpgResource(x)
@@ -1143,6 +1147,8 @@ el.update.upgs = _=>{
     if (mapID == 'p') {
         updateUpgradesHTML('perk')
         updateUpgradesHTML('plat')
+        tmp.el.losePerksBtn.setDisplay(hasUpgrade('auto', 4))
+        tmp.el.losePerks.setTxt(player.options.losePerks ? "OFF" : "ON")
     }
     if (mapID == 'auto') updateUpgradesHTML('auto')
     if (mapID == 'pc') {
@@ -1166,19 +1172,28 @@ el.update.upgs = _=>{
     }
 
 	if (mapID == 'opt') {
-		tmp.el.hideUpgOption.setTxt(player.options.hideUpgOption?"ON":"OFF")
+		tmp.el.scientific.setTxt(player.options.scientific?"ON":"OFF")
 		tmp.el.grassCap.setTxt(player.options.lowGrass?250:"Unlimited")
+		tmp.el.hideUpgOption.setTxt(player.options.hideUpgOption?"ON":"OFF")
+		tmp.el.hideMilestoneBtn.setDisplay(player.grasshop > 0 || player.sTimes > 0)
+		tmp.el.hideMilestone.setTxt(player.options.hideMilestone?"At last obtained":"All")
+	}
+	if (mapID == 'stats') {
+		tmp.el.time.setHTML("Time: " + formatTime(player.time))
 
-		tmp.el.stats.setDisplay(!player.decel)
-		tmp.el.aStats.setDisplay(player.decel)
-
-		if (!player.decel) {
+		tmp.el.stats.setDisplay(!player.decel || player.options.allStats)
+		if (!player.decel || player.options.allStats) {
 			tmp.el.pTimes.setHTML(player.pTimes ? "You have done " + player.pTimes + " <b style='color: #5BFAFF'>Prestige</b> resets.<br>Time: " + formatTime(player.pTime) : "")
 			tmp.el.cTimes.setHTML(player.cTimes ? "You have done " + player.cTimes + " <b style='color: #FF84F6'>Crystalize</b> resets.<br>Time: " + formatTime(player.cTime) : "")
 			tmp.el.sTimes.setHTML(player.sTimes ? "You have done " + player.sTimes + " <b style='color: #c5c5c5'>Steelie</b> resets.<br>Time: " + formatTime(player.sTime) : "")
-		} else {
+		}
+		tmp.el.aStats.setDisplay(player.decel || player.options.allStats)
+		if (player.decel || player.options.allStats) {
 			tmp.el.aTimes.setHTML(player.aTimes ? "You have done " + player.aTimes + " <b style='color: #FF4E4E'>Anonymity</b> resets.<br>Time: " + formatTime(player.aTime) : "")
 			tmp.el.lTimes.setHTML(player.lTimes ? "You have done " + player.lTimes + " <b style='color: #2b2b2b'>Liquefy</b> resets.<br>Time: " + formatTime(player.lTime) : "")
 		}
+
+		tmp.el.allStatsBtn.setDisplay(hasUpgrade('factory', 4))
+		tmp.el.allStats.setTxt(player.options.allStats ? "All" : "This realm")
 	}
 }

@@ -221,7 +221,7 @@ el.update.chal = _=>{
             for (let i in CHALS) {
                 let c = CHALS[i]
 
-                let unl2 = c.unl()
+				let unl2 = c.unl() && (!player.options.hideUpgOption || player.chal.comp[i] < c.max || player.chal.progress == i)
 
                 tmp.el['chal_div_'+i].setDisplay(unl2)
 

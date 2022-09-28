@@ -293,7 +293,7 @@ function toSuperscript(value) {
       .join("");
 }
 
-function format(ex, acc=2, max=9, type="mixed_sc") {
+function format(ex, acc=2, max=9, type) {
     ex = E(ex)
     neg = ex.lt(0)?"-":""
     if (ex.mag == Infinity) return neg + 'Infinity'
@@ -301,6 +301,8 @@ function format(ex, acc=2, max=9, type="mixed_sc") {
     if (ex.lt(0)) ex = ex.mul(-1)
     if (ex.eq(0)) return ex.toFixed(acc)
     let e = ex.log10().floor()
+
+	if (!type) type = player.options.scientific ? "sc" : "mixed_sc"
     switch (type) {
         case "sc":
             if (ex.log10().lt(Math.min(-acc,0)) && acc > 1) {

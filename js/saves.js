@@ -142,6 +142,7 @@ function getPlayerData() {
         momentum: 0,
 
         time: 0,
+        map_notify: {},
         version: VER,
     }
     for (let x in UPGS) {
@@ -316,9 +317,9 @@ function loadGame(start=true, gotNaN=false) {
         //for (let x = 0; x < 10; x++) createGrass()
         grassCanvas()
         tmp.el.loading.el.remove()
-        setInterval(save,60000)
+        setInterval(save, 30000)
         setInterval(loop, 100/3)
-        setInterval(checkNaN,1000)
+        setInterval(checkNaN, 1000)
     }
 }
 

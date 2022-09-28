@@ -55,7 +55,10 @@ RESET.pp = {
         player.xp = E(0)
         player.level = 0
 
-        let keep_perk = order == "p" && hasUpgrade('auto',4) || order == "c" && hasUpgrade('auto',7) || order == "gh" && player.grasshop >= 10
+        let keep_perk = ((order == "p" && hasUpgrade('auto',4)) ||
+			(order == "c" && hasUpgrade('auto',7)) ||
+			(order == "gh" && player.grasshop >= 10)) &&
+			!player.options.losePerks
 
         if (!keep_perk) {
             player.maxPerk = 0
@@ -91,6 +94,7 @@ UPGS.pp = {
             max: 1000,
 
             title: "Grass Value II",
+            tier: 2,
             desc: `Increase grass gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "pp",
@@ -109,6 +113,7 @@ UPGS.pp = {
             max: 1000,
 
             title: "XP II",
+            tier: 2,
             desc: `Increase XP gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "pp",
@@ -225,6 +230,7 @@ UPGS.ap = {
             max: 1000,
 
             title: "AP Value",
+            tier: 5,
             desc: `Increase grass gain by <b class="green">+25%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "ap",
@@ -243,6 +249,7 @@ UPGS.ap = {
             max: 1000,
 
             title: "AP Charge",
+            tier: 2,
             desc: `Increase charge rate by <b class="green">+10%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "ap",
@@ -261,6 +268,7 @@ UPGS.ap = {
             max: 1000,
 
             title: "AP XP",
+            tier: 5,
             desc: `Increase XP gain by <b class="green">+25%</b> per level. This effect is increased by <b class="green">25%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "ap",
@@ -279,6 +287,7 @@ UPGS.ap = {
             max: 1000,
 
             title: "AP TP",
+            tier: 3,
             desc: `Increase TP gain by <b class="green">+50%</b> per level. This effect is increased by <b class="green">50%</b> for every <b class="yellow">25</b> levels.`,
         
             res: "ap",
@@ -297,6 +306,7 @@ UPGS.ap = {
             max: 50,
 
             title: "AP More Grass",
+            tier: 2,
             desc: `Increase grass cap by <b class="green">10</b> per level.`,
         
             res: "ap",
@@ -315,6 +325,7 @@ UPGS.ap = {
             max: 50,
 
             title: "Scaled Level II",
+            tier: 2,
             desc: `Level scales another <b class="green">+1</b> later per level (before multiplication).`,
 
             res: "ap",

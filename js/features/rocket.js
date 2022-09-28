@@ -471,6 +471,7 @@ el.update.rocket = _=>{
 
         tmp.el.rf_craft_bulk.setTxt("Craft to "+format(Math.max(tmp.rf_bulk-player.rocket.total_fp,0),0)+" Rocket Fuel")
         tmp.el.rf_craft_bulk.setClasses({locked: tmp.rf_bulk<=player.rocket.total_fp })
+        tmp.el.rf_div.setDisplay(hasUpgrade("factory", 5))
     } else if (mapID == 'rp') {
         tmp.el.reset_btn_rocket_part.setClasses({locked: player.rocket.total_fp < tmp.rp_req[1] || player.steel.lt(tmp.rp_req[0])})
     }

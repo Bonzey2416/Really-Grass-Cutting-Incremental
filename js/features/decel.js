@@ -79,6 +79,7 @@ UPGS.aGrass = {
             max: 250,
 
             title: "Anti-Grass Grow Speed",
+            tier: 2,
             desc: `Increase grass grow speed by <b class="green">10%</b> per level.`,
 
             res: "aGrass",
@@ -115,6 +116,7 @@ UPGS.aGrass = {
             max: 1000,
 
             title: "Anti-Grass Value",
+            tier: 4,
             desc: `Increase grass gain by <b class="green">+50%</b> per level.<br>This effect is increased by <b class="green">50%</b> every <b class="yellow">25</b> levels.`,
 
             res: "aGrass",
@@ -133,6 +135,7 @@ UPGS.aGrass = {
             max: 1000,
 
             title: "Anti-Grass XP",
+            tier: 4,
             desc: `Increase XP gain by <b class="green">+50%</b> per level.<br>This effect is increased by <b class="green">50%</b> every <b class="yellow">25</b> levels.`,
 
             res: "aGrass",

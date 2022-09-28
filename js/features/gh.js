@@ -171,6 +171,7 @@ el.update.ghMilestone = _=>{
                     let m = MAIN.gh.milestone[x]
                     let id = "gh_mil_ctn"+x
 
+                    tmp.el[id+"_div"].setDisplay(!player.options.hideMilestone || x+1 >= GH_MIL_LEN || player.grasshop < MAIN.gh.milestone[x+1].r)
                     tmp.el[id+"_div"].setClasses({bought: player.grasshop >= m.r})
                     if (m.effDesc) tmp.el[id+"_eff"].setHTML(m.effDesc(tmp.ghEffect[x]))
                 }
