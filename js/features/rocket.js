@@ -471,7 +471,8 @@ el.update.rocket = _=>{
 
         tmp.el.rf_craft_bulk.setTxt("Craft to "+format(Math.max(tmp.rf_bulk-player.rocket.total_fp,0),0)+" Rocket Fuel")
         tmp.el.rf_craft_bulk.setClasses({locked: tmp.rf_bulk<=player.rocket.total_fp })
-        tmp.el.rf_div.setDisplay(hasUpgrade("factory", 5))
+
+        tmp.el.refinery_div.setDisplay(hasUpgrade("factory", 5))
     } else if (mapID == 'rp') {
         tmp.el.reset_btn_rocket_part.setClasses({locked: player.rocket.total_fp < tmp.rp_req[1] || player.steel.lt(tmp.rp_req[0])})
     }
@@ -488,7 +489,7 @@ function updateRocketTemp() {
 }
 
 tmp_update.push(_=>{
-    tmp.rp_req = [Decimal.pow(4+player.rocket.part/2,player.rocket.part).mul(1e60),player.rocket.part>9?1/0:15*player.rocket.part+15]
+    tmp.rp_req = [Decimal.pow(4+player.rocket.part/2,player.rocket.part).mul(1e60),player.rocket.part>9&&player.gTimes==0?1/0:15*player.rocket.part+15]
     tmp.rf_base_mult = Decimal.pow(1.5,player.rocket.part)
 
     updateRocketTemp()

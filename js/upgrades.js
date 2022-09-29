@@ -12,9 +12,10 @@ const UPG_RES = {
     oil: ["Oil",_=>[player,"oil"],'LiquefyBase'],
     rf: ["Rocket Fuel",_=>[player.rocket,"amount"],'RocketBase'],
     momentum: ["Momentum",_=>[player,"momentum"],'RocketBase'],
+    moonstone: ["Moonstone",_=>[player,"moonstone"],'MoonBase'],
 }
 
-const isResNumber = ['perk','plat','rf','momentum']
+const isResNumber = ['perk','plat','rf','momentum','moonstone']
 
 const UPGS = {
     grass: {
@@ -1061,8 +1062,10 @@ function updateUpgradesHTML(id) {
                 if (upg.effDesc) h += '<br>Effect: <span class="cyan">'+upg.effDesc(tu.eff[ch])+"</span>"
 
                 if (amt < tu.max[ch]) {
+                    let m = Math.min(25,tu.max[ch]-Math.floor(amt/25)*25)
                     let cost2 = upg.costOnce?Decimal.mul(tu.cost[ch],25-amt%25):upg.cost((Math.floor(amt/25)+1)*25-1)//upg.cost(amt+25)
                     if (tu.max[ch] >= 25) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} ${dis}</span>`
+
                     h += `
                     <br><span class="${Decimal.gte(tmp.upg_res[upg.res],tu.cost[ch])?"green":"red"}">Cost: ${format(tu.cost[ch],0)} ${dis}</span>
                     <br>You have ${format(res,0)} ${dis}
@@ -1108,7 +1111,7 @@ function updateUpgradesHTML(id) {
 }
 
 function hasUpgrade(id,x) { return player.upgs[id][x] > 0 }
-function upgEffect(id,x,def=E(1)) { return tmp.upgs[id].eff[x] || def }
+function upgEffect(id,x,def=1) { return tmp.upgs[id].eff[x] || def }
 
 function resetUpgrades(id) {
     for (let x in UPGS[id].ctn) player.upgs[id][x] = 0
@@ -1140,36 +1143,39 @@ el.setup.upgs = _=>{
 }
 
 el.update.upgs = _=>{
-    if (mapID == 'g') {
-        updateUpgradesHTML('grass')
-        updateUpgradesHTML('aGrass')
-    }
-    if (mapID == 'p') {
-        updateUpgradesHTML('perk')
-        updateUpgradesHTML('plat')
-        tmp.el.losePerksBtn.setDisplay(hasUpgrade('auto', 4))
-        tmp.el.losePerks.setTxt(player.options.losePerks ? "OFF" : "ON")
-    }
-    if (mapID == 'auto') updateUpgradesHTML('auto')
-    if (mapID == 'pc') {
-        updateUpgradesHTML('pp')
-        updateUpgradesHTML('crystal')
+	if (mapID == 'g') {
+		updateUpgradesHTML('grass')
+		updateUpgradesHTML('aGrass')
+	}
+	if (mapID == 'p') {
+		updateUpgradesHTML('perk')
+		updateUpgradesHTML('plat')
+		tmp.el.losePerksBtn.setDisplay(hasUpgrade('auto', 4))
+		tmp.el.losePerks.setTxt(player.options.losePerks ? "OFF" : "ON")
+	}
+	if (mapID == 'auto') updateUpgradesHTML('auto')
+	if (mapID == 'pc') {
+		updateUpgradesHTML('pp')
+		updateUpgradesHTML('crystal')
 
-        updateUpgradesHTML('ap')
-        updateUpgradesHTML('oil')
-    }
-    if (mapID == 'gh') updateUpgradesHTML('factory')
-    if (mapID == 'fd') {
-        updateUpgradesHTML('foundry')
-        updateUpgradesHTML('gen')
-    }
-    if (mapID == 'as') {
-        updateUpgradesHTML('assembler')
-        updateUpgradesHTML('rocket')
-    }
-    if (mapID == 'rp') {
-        updateUpgradesHTML('momentum')
-    }
+		updateUpgradesHTML('ap')
+		updateUpgradesHTML('oil')
+	}
+	if (mapID == 'gh') updateUpgradesHTML('factory')
+	if (mapID == 'fd') {
+		updateUpgradesHTML('foundry')
+		updateUpgradesHTML('gen')
+	}
+	if (mapID == 'as') {
+		updateUpgradesHTML('assembler')
+		updateUpgradesHTML('rocket')
+	}
+	if (mapID == 'rp') {
+		updateUpgradesHTML('momentum')
+	}
+	if (mapID == 'at') {
+		updateUpgradesHTML('moonstone')
+	}
 
 	if (mapID == 'opt') {
 		tmp.el.scientific.setTxt(player.options.scientific?"ON":"OFF")
@@ -1181,19 +1187,28 @@ el.update.upgs = _=>{
 	if (mapID == 'stats') {
 		tmp.el.time.setHTML("Time: " + formatTime(player.time))
 
-		tmp.el.stats.setDisplay(!player.decel || player.options.allStats)
-		if (!player.decel || player.options.allStats) {
+		let stats = !player.decel && !inSpace()
+		tmp.el.stats.setDisplay(stats || player.options.allStats)
+		if (stats || player.options.allStats) {
 			tmp.el.pTimes.setHTML(player.pTimes ? "You have done " + player.pTimes + " <b style='color: #5BFAFF'>Prestige</b> resets.<br>Time: " + formatTime(player.pTime) : "")
 			tmp.el.cTimes.setHTML(player.cTimes ? "You have done " + player.cTimes + " <b style='color: #FF84F6'>Crystalize</b> resets.<br>Time: " + formatTime(player.cTime) : "")
 			tmp.el.sTimes.setHTML(player.sTimes ? "You have done " + player.sTimes + " <b style='color: #c5c5c5'>Steelie</b> resets.<br>Time: " + formatTime(player.sTime) : "")
 		}
-		tmp.el.aStats.setDisplay(player.decel || player.options.allStats)
-		if (player.decel || player.options.allStats) {
+
+		let aStats = player.decel && !inSpace()
+		tmp.el.aStats.setDisplay(aStats || player.options.allStats)
+		if (aStats || player.options.allStats) {
 			tmp.el.aTimes.setHTML(player.aTimes ? "You have done " + player.aTimes + " <b style='color: #FF4E4E'>Anonymity</b> resets.<br>Time: " + formatTime(player.aTime) : "")
 			tmp.el.lTimes.setHTML(player.lTimes ? "You have done " + player.lTimes + " <b style='color: #2b2b2b'>Liquefy</b> resets.<br>Time: " + formatTime(player.lTime) : "")
 		}
 
-		tmp.el.allStatsBtn.setDisplay(hasUpgrade('factory', 4))
+		let gStats = inSpace()
+		tmp.el.gStats.setDisplay(gStats || player.options.allStats)
+		if (gStats || player.options.allStats) {
+			tmp.el.gTimes.setHTML(player.gTimes ? "You have done " + player.gTimes + " <b style='color: #505'>Galactic</b> resets.<br>Time: " + formatTime(player.gTime) : "")
+		}
+
+		tmp.el.allStatsBtn.setDisplay(hasUpgrade('factory', 4) || player.gTimes > 0)
 		tmp.el.allStats.setTxt(player.options.allStats ? "All" : "This realm")
 	}
 }

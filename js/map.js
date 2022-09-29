@@ -1,23 +1,38 @@
 var mapID = 'g'
-var mapPos = [3,3]
 var mapLoc = "Grass Field"
+var mapPos = {
+	dim: "earth",
+	earth: [3,3],
+	space: [3,3]
+}
 
 window.addEventListener('keydown', e=>{
-    if (e.keyCode == 65 || e.keyCode == 37) moveMap(-1,0)
-    if (e.keyCode == 68 || e.keyCode == 39) moveMap(1,0)
-    if (e.keyCode == 87 || e.keyCode == 38) moveMap(0,-1)
-    if (e.keyCode == 83 || e.keyCode == 40) moveMap(0,1)
+	if (e.keyCode == 65 || e.keyCode == 37) moveMap(-1,0)
+	if (e.keyCode == 68 || e.keyCode == 39) moveMap(1,0)
+	if (e.keyCode == 87 || e.keyCode == 38) moveMap(0,-1)
+	if (e.keyCode == 83 || e.keyCode == 40) moveMap(0,1)
 })
 
-const MAP = [
-    [null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null],
-    [null,null,null,'opt','stats','rp',null],
-    [null,null,'auto','g','pc','gh','fd'],
-    [null,null,null,'p','chal','as',null],
-    [null,null,null,null,null,null,null],
-    [null,null,null,null,null,null,null],
-]
+const MAP = {
+	earth: [
+		[null,null,null,null,null,null,null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,'opt','stats','rp',null],
+		[null,null,'auto','g','pc','gh','fd'],
+		[null,null,null,'p','chal','as',null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,null,null,null,null],
+	],
+	space: [
+		[null,null,null,null,null,null,null],
+		[null,null,null,'stats',null,null,null],
+		[null,null,null,'opt',null,null,null],
+		[null,null,null,'sc','at',null,null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,null,null,null,null],
+	]
+}
 
 const MAP_UNLS = {
 	g: _ => true,
@@ -30,74 +45,93 @@ const MAP_UNLS = {
 	gh: _ => player.cTimes > 0,
 	fd: _ => hasUpgrade('factory', 0),
 	as: _ => hasUpgrade('factory', 3),
-	rp: _ => hasUpgrade('factory', 6)
+	rp: _ => hasUpgrade('factory', 6),
+	sc: _ => true,
+	at: _ => true,
 }
 
 const MAP_IDS = (_=>{
-    let x = []
-    for (i in MAP) for (j in MAP[i]) if (MAP[i][j]) x.push(MAP[i][j])
-    return x
+	let x = []
+	for (i of Object.values(MAP)) for (j of i) for (k of j) if (k) x.push(k)
+	return x
 })()
 
-function unlockedMap(dx,dy) {
-	let i = MAP?.[dy]?.[dx] 
+function unlockedMap(dx,dy,dim) {
+	let i = MAP?.[dim]?.[dy]?.[dx] 
 	return MAP_UNLS[i] && MAP_UNLS[i]()
 }
 
-function moveMap(dx,dy) {
-    switchMap(mapPos[0]+dx,mapPos[1]+dy)
+function getMapPos() {
+	return mapPos[mapPos.dim]
 }
 
-function switchMap(mx,my) {
-    if (unlockedMap(mx,my)) {
-        mapPos[0] = mx
-        mapPos[1] = my
+function moveMap(dx,dy) {
+	let pos = getMapPos()
+	switchMapPos(pos[0]+dx,pos[1]+dy,mapPos.dim)
+}
 
-        mapID = MAP[my][mx]
-        //delete player.map_notify[mapID]
-        showLoc(MAP_LOCS[mapID])
-    }
+function switchMapPos(mx,my,dim) {
+	if (unlockedMap(mx,my,dim)) {
+		mapPos[dim] = [mx, my]
+		if (mapPos.dim == dim) switchMapId(MAP[dim][my][mx])
+	}
+}
+
+function switchMapId(id) {
+	mapID = id
+	delete player.map_notify[id]
+	showLoc(MAP_LOCS[id])
 }
 
 el.update.map = _=>{
-    for (x in MAP_IDS) {
-        let id = MAP_IDS[x]
-        let m_div = tmp.el["map_div_"+id]
+	for (x in MAP_IDS) {
+		let id = MAP_IDS[x]
+		let m_div = tmp.el["map_div_"+id]
 
-        if (m_div) m_div.setDisplay(id == mapID)
-    }
+		if (m_div) m_div.setDisplay(id == mapID)
+	}
 
-    let [mx,my] = mapPos
+	let dim = mapPos.dim
+	let [mx,my] = getMapPos()
 
-	updateMapButton("lMap", mx-1, my)
-	updateMapButton("rMap", mx+1, my)
-	updateMapButton("uMap", mx, my-1)
-	updateMapButton("dMap", mx, my+1)
+	updateMapButton("lMap", mx-1, my, dim)
+	updateMapButton("rMap", mx+1, my, dim)
+	updateMapButton("uMap", mx, my-1, dim)
+	updateMapButton("dMap", mx, my+1, dim)
+
+	tmp.el.spaceButton.setDisplay(player.gTimes > 0)
+	tmp.el.spaceButton.setTxt(inSpace() ? "Go to Ground" : "Go to Space")
 }
 
-function updateMapButton(el, mx, my) {
-	const mapId = MAP?.[my]?.[mx]
+function updateMapButton(el, mx, my, dim) {
+	const mapId = MAP?.[dim]?.[my]?.[mx]
 	tmp.el[el].setClasses({
 		map_btn: true,
-		locked: !unlockedMap(mx,my),
-		[MAP_COLORS[mapId]]: unlockedMap(mx,my)/* && !player.map_notify[mapId],
-		notify: player.map_notify[mapId],*/
+		locked: !unlockedMap(mx, my, dim),
+		[MAP_COLORS[mapId]]: unlockedMap(mx, my, dim) && !player.map_notify[mapId],
+		notify: player.map_notify[mapId],
 	})
 }
 
 /* EXTENSION */
 el.update.map_ext = _ => {
-	let mapId = MAP[mapPos[1]][mapPos[0]]
-	tmp.el.position.setTxt(`(${mapPos[0]},${mapPos[1]}) ${MAP_LOCS[mapId]}: ${GO_TO_NAMES[mapId]}`)
+	let pos = getMapPos()
+	let mapId = MAP[mapPos.dim][pos[1]][pos[0]]
+	tmp.el.position.setTxt(`(${pos[0]},${pos[1]}) ${MAP_LOCS[mapId]}: ${GO_TO_NAMES[mapId]}`)
 
 	tmp.el.map_div.setDisplay(go_to)
 	if (go_to) {
-		for (const [y, dy] of Object.entries(MAP)) {
-			for (const [x, dx] of Object.entries(dy)) {
-				if (dx !== null) {
-					const unl = MAP_UNLS[dx]()
-					tmp.el["map_btn_"+dx].setDisplay(unl)
-					if (unl) updateMapButton("map_btn_"+dx, x, y)
+		for (const [dim, d_dim] of Object.entries(MAP)) {
+			tmp.el[`map_div_${dim}`].setDisplay(mapPos.dim == dim)
+			if (mapPos.dim != dim) continue
+
+			for (const [y, dy] of Object.entries(d_dim)) {
+				for (const [x, dx] of Object.entries(dy)) {
+					if (dx !== null) {
+						const unl = MAP_UNLS[dx]()
+						tmp.el[`map_btn_${dim}_${dx}`].setDisplay(unl)
+						if (unl) updateMapButton(`map_btn_${dim}_${dx}`, x, y, dim)
+					}
 				}
 			}
 		}
@@ -116,7 +150,9 @@ const MAP_COLORS = {
 	gh: "gh",
 	fd: "gh",
 	as: "gh",
-	rp: "gh"
+	rp: "gh",
+	sc: "gal",
+	at: "gal"
 }
 
 const MAP_LOCS = {
@@ -131,7 +167,9 @@ const MAP_LOCS = {
 	gh: "Prestige",
 	fd: "Factory",
 	as: "Factory",
-	rp: "Factory"
+	rp: "Factory",
+	sc: "Space",
+	at: "Space",
 }
 
 let locTimeout
@@ -159,22 +197,27 @@ const GO_TO_NAMES = {
 	gh: "Grasshop",
 	fd: "Foundry",
 	as: "Assembler",
-	rp: "Rocket"
+	rp: "Rocket",
+	sc: "Star Chart",
+	at: "Galactic",
 }
 
 let go_to = false
 el.setup.go_to = _ => {
-	let html = "<table>"
-	for (const [y, dy] of Object.entries(MAP)) {
-		html += "<tr>"
-		for (const [x, dx] of Object.entries(dy)) {
-			html += "<td>"
-			if (dx !== null) html += `<button id="map_btn_${dx}" onclick="switchMap(${x}, ${y})">${GO_TO_NAMES[dx]}</button>`
-			html += "</td>"
+	let html = ""
+	for (const [dim, d_dim] of Object.entries(MAP)) {
+		html += `<table id="map_div_${dim}">`
+		for (const [y, dy] of Object.entries(d_dim)) {
+			html += "<tr>"
+			for (const [x, dx] of Object.entries(dy)) {
+				html += "<td>"
+				if (dx !== null) html += `<button id="map_btn_${dim}_${dx}" onclick="switchMapPos(${x}, ${y}, '${dim}')">${GO_TO_NAMES[dx]}</button>`
+				html += "</td>"
+			}
+			html += "</tr>"
 		}
-		html += "</tr>"
+		html += "</table>"
 	}
-	html += "</table>"
 	new Element("map_div").setHTML(html)
 }
 
@@ -208,12 +251,28 @@ const MAP_NOTIFY = {
 }
 
 tmp_update.push(_=>{
-    for (let [id, cond] of Object.entries(MAP_NOTIFY)) {
-        cond = cond()
+	for (let [id, cond] of Object.entries(MAP_NOTIFY)) {
+		cond = cond()
 		if (tmp.map_notify[id] === undefined) tmp.map_notify[id] = cond
 		if (cond > tmp.map_notify[id]) {
 			tmp.map_notify[id] = cond
 			player.map_notify[id] = 1
 		}
-    }
+	}
 })
+
+//Dimensions
+function inSpace() {
+	return mapPos.dim == "space"
+}
+
+function goToSpace() {
+	switchDim(mapPos.dim == "space" ? "earth" : "space")
+}
+
+function switchDim(id) {
+	mapPos.dim = id
+
+	let pos = getMapPos()
+	switchMapId(MAP[mapPos.dim][pos[1]][pos[0]])
+}

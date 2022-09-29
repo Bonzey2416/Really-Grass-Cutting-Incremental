@@ -9,6 +9,7 @@ function calc(dt) {
     player.sTime += dt
     player.aTime += dt
     player.lTime += dt
+    player.gTime += dt
 
     if (tmp.spawn_time >= tmp.grassSpawn) {
         while (tmp.spawn_time >= tmp.grassSpawn) {
@@ -36,6 +37,10 @@ function calc(dt) {
     if (hasUpgrade('factory',7)) {
         player.ap = player.ap.add(player.bestAP2.mul(dt*tmp.oilRigBase))
         player.oil = player.oil.add(player.bestOil2.mul(dt*tmp.oilRigBase))
+    }
+
+    if (tmp.steelPass > 0) {
+        player.steel = player.steel.add(tmp.steelGain.mul(tmp.steelPass*dt))
     }
 
     if (hasUpgrade('factory',2)) player.chargeRate = player.chargeRate.add(tmp.chargeGain.mul(dt))
