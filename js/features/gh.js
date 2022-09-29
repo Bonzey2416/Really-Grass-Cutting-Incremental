@@ -1,5 +1,7 @@
+//GRASSHOP
 MAIN.gh = {
     req: _=> Math.ceil(300+E(player.grasshop).scale(20,2,0).toNumber()*10),
+    bulk: _=> player.level>=300?E((player.level-300)/10).scale(20,2,0,true).floor().toNumber()+1:0,
 
     milestone: [
         {
@@ -57,51 +59,8 @@ MAIN.gh = {
     ],
 }
 
-MAIN.agh_milestone = [
-    {
-        r: 36,
-        desc: `Grass gain is increased by <b class="green">100%</b> every astral.`,
-        effect: _=>Decimal.pow(2,player.astral),
-        effDesc: x=> format(x)+"x",
-    },{
-        r: 32,
-        desc: `XP gain is increased by <b class="green">100%</b> every astral.<br>Keep challenges on Grasshop, Galactic.`,
-        effect: _=>Decimal.pow(2,player.astral),
-        effDesc: x=> format(x)+"x",
-    },{
-        r: 28,
-        desc: `TP gain is increased by <b class="green">100%</b> every astral.`,
-        effect: _=>Decimal.pow(2,player.astral),
-        effDesc: x=> format(x)+"x",
-    },{
-        r: 24,
-        desc: `Star gain is increased by <b class="green">10%</b> per astral.<br>Tier requirement is sightly weaker.`,
-        effect: _=>player.astral/10+1,
-        effDesc: x=> format(x)+"x",
-    },
-]
-
-MAIN.gs = {
-    req: _=> 360+player.grassskip*10,
-
-    milestone: [
-        {
-            r: 1,
-            desc: `Gain <b class="green">+5</b> more stars per grass-skip.`,
-            effect: _=>5*player.grassskip,
-            effDesc: x=> "+"+format(x,0),
-        },{
-            r: 2,
-            desc: `Gain <b class="green">+2</b> more SP per grass-skip.`,
-            effect: _=>player.grassskip*2,
-            effDesc: x=> "+"+format(x,0),
-        },
-    ],
-}
-
 const GH_MIL_LEN = MAIN.gh.milestone.length
-const AGH_MIL_LEN = MAIN.agh_milestone.length
-const GS_MIL_LEN = MAIN.gs.milestone.length
+function getGHEffect(x,def=1) { return tmp.ghEffect[x]||def }
 
 RESET.gh = {
     unl: _=>player.cTimes>0 && !player.decel,
@@ -112,15 +71,18 @@ RESET.gh = {
     resetGain: _=> `Reach Level <b>${format(tmp.gh_req,0)}</b> to Grasshop`,
 
     title: `Grasshop`,
+    btns: `<button id="multGHBtn" onclick="player.ghMult = !player.ghMult">Multi: <span id="multGHOption">OFF</span></button>`,
     resetBtn: `Grasshop!`,
     hotkey: `G`,
 
     reset(force=false) {
         if ((this.req()&&player.level>=tmp.gh_req)||force) {
+            let res = Math.max(player.grasshop+1, MAIN.gh.bulk())
             if (force) {
                 this.doReset()
-            } else if (player.grasshop >= 20 || player.gTimes>0) {
-                player.grasshop++
+            } else if (player.grasshop >= 20 || player.gTimes > 0) {
+                if (hasStarTree('auto',1) && player.ghMult) player.grasshop = res
+                else player.grasshop++
 
                 updateTemp()
         
@@ -129,7 +91,8 @@ RESET.gh = {
                 tmp.ghRunning = true
                 document.body.style.animation = "implode 2s 1"
                 setTimeout(_=>{
-                    player.grasshop++
+                    if (hasStarTree('auto',1) && player.ghMult) player.grasshop = res
+                    else player.grasshop++
 
                     updateTemp()
         
@@ -158,24 +121,50 @@ RESET.gh = {
     },
 }
 
+//GRASS-SKIPS
+MAIN.gs = {
+    req: _=> Math.ceil(400+E(player.grassskip).scale(10,2,0).toNumber()*10),
+    bulk: _=> E(player.level-400).div(10).scale(10,2,0,true).floor().toNumber()+1,
+
+    milestone: [
+        {
+            r: 1,
+            desc: `Gain <b class="green">+5</b> more stars per grass-skip.`,
+            effect: _=>5*player.grassskip,
+            effDesc: x=> "+"+format(x,0),
+        },{
+            r: 2,
+            desc: `Gain <b class="green">+2</b> more SP per grass-skip.`,
+            effect: _=>player.grassskip*2,
+            effDesc: x=> "+"+format(x,0),
+        },
+    ],
+}
+
+const GS_MIL_LEN = MAIN.gs.milestone.length
+function getGSEffect(x,def=1) { return tmp.gsEffect[x]||def }
+
 RESET.gs = {
     unl: _=>player.gTimes>0 && player.decel,
-    req: _=>player.level>=360,
-    reqDesc: _=>`Reach Level 360.`,
+    req: _=>player.level>=400,
+    reqDesc: _=>`Reach Level 400.`,
 
     resetDesc: `Grass-skipping resets everything liquefy does as well as oil except oil upgrades.`,
     resetGain: _=> `Reach Level <b>${format(tmp.gs_req,0)}</b> to Grass-skip`,
 
     title: `Grass-Skip`,
+    btns: `<button id="multGSBtn" onclick="player.gsMult = !player.gsMult">Multi: <span id="multGSOption">OFF</span></button>`,
     resetBtn: `Grass-Skip!`,
 
     reset(force=false) {
         if ((this.req()&&player.level>=tmp.gs_req)||force) {
+            let res = Math.max(player.grassskip+1, MAIN.gs.bulk())
             if (force) {
                 this.doReset()
             } else {
                 player.gsUnl = true
-                player.grassskip++
+                if (player.gsMult) player.grassskip = res
+                else player.grassskip++
 
                 updateTemp()
         
@@ -192,6 +181,35 @@ RESET.gs = {
     },
 }
 
+//ANTI-GH MILESTONES
+MAIN.agh_milestone = [
+    {
+        r: 36,
+        desc: `Grass gain is increased by <b class="green">100%</b> every astral.`,
+        effect: _=>Decimal.pow(2,player.astral),
+        effDesc: x=> format(x)+"x",
+    },{
+        r: 32,
+        desc: `XP gain is increased by <b class="green">100%</b> every astral.<br>Keep challenges on Grasshop, Galactic.`,
+        effect: _=>Decimal.pow(2,player.astral),
+        effDesc: x=> format(x)+"x",
+    },{
+        r: 28,
+        desc: `TP gain is increased by <b class="green">100%</b> every astral.`,
+        effect: _=>Decimal.pow(2,player.astral),
+        effDesc: x=> format(x)+"x",
+    },{
+        r: 24,
+        desc: `Star gain is increased by <b class="green">10%</b> per astral.<br>Tier requirement is sightly weaker.`,
+        effect: _=>player.astral/10+1,
+        effDesc: x=> format(x)+"x",
+    },
+]
+
+const AGH_MIL_LEN = MAIN.agh_milestone.length
+function getAGHEffect(x,def=1) { return tmp.aghEffect[x]||def }
+
+//OTHERS
 tmp_update.push(_=>{
     tmp.gh_req = MAIN.gh.req()
 
@@ -212,10 +230,6 @@ tmp_update.push(_=>{
         if (m.effect) tmp.gsEffect[x] = m.effect()
     }
 })
-
-function getGHEffect(x,def=1) { return tmp.ghEffect[x]||def }
-function getGSEffect(x,def=1) { return tmp.gsEffect[x]||def }
-function getAGHEffect(x,def=1) { return tmp.aghEffect[x]||def }
 
 el.setup.milestones = _=>{
     let t = new Element("milestone_div_gh")
@@ -296,6 +310,9 @@ el.update.milestones = _=>{
         tmp.el.milestone_div_gh.setDisplay(unl)
 
         if (unl) {
+            tmp.el.multGHOption.setDisplay(hasStarTree('auto', 1))
+            tmp.el.multGHOption.setTxt(player.ghMult?"ON":"OFF")
+
             unl = player.grasshop>0 || player.gTimes>0
 
             tmp.el.gh_mil_req.setDisplay(!unl)
@@ -320,6 +337,9 @@ el.update.milestones = _=>{
         tmp.el.milestone_div_gs.setDisplay(unl)
 
         if (unl) {
+            tmp.el.multGSOption.setDisplay(hasStarTree('auto', 4))
+            tmp.el.multGSOption.setTxt(player.gsMult ? "ON" : "OFF")
+
             unl = player.grassskip>0 || player.gsUnl
 
             tmp.el.gs_mil_req.setDisplay(!unl)
@@ -332,7 +352,7 @@ el.update.milestones = _=>{
                     let m = MAIN.gs.milestone[x]
                     let id = "gs_mil_ctn"+x
 
-                    tmp.el[id+"_div"].setClasses({bought: player.grassskip >= m.r})
+                    tmp.el[id+"_div"].setDisplay(!player.options.hideMilestone || x+1 >= GS_MIL_LEN || player.grassskip < MAIN.gs.milestone[x+1].r)
                     if (m.effDesc) tmp.el[id+"_eff"].setHTML(m.effDesc(tmp.gsEffect[x]))
                 }
             }
@@ -345,7 +365,7 @@ el.update.milestones = _=>{
             let m = MAIN.agh_milestone[x]
             let id = "agh_mil_ctn"+x
 
-            tmp.el[id+"_div"].setDisplay(!player.options.hideMilestone || x+1 >= AGH_MIL_LEN || player.lowGH > MAIN.gh.milestone[x+1].r)
+            tmp.el[id+"_div"].setDisplay(!player.options.hideMilestone || x+1 >= AGH_MIL_LEN || player.lowGH > MAIN.agh_milestone[x+1].r)
             tmp.el[id+"_div"].setClasses({bought: player.lowGH <= m.r})
             if (m.effDesc) tmp.el[id+"_eff"].setHTML(m.effDesc(tmp.aghEffect[x]))
         }

@@ -114,7 +114,7 @@
 				<button onclick="toggleLowGrass()">Grass cap: <span id="grassCap">Unlimited</span></button>
 				<button onclick="toggleOption('hideUpgOption')">Hide maxed: <span id="hideUpgOption"></span></button>
 				<button id="hideMilestoneBtn" onclick="toggleOption('hideMilestone')">Show milestones: <span id="hideMilestone"></span></button><br><br>
-				Really Grass Cutting Incremental - Prototype v0.4-EX - Made by TehAarex<br>
+				Really Grass Cutting Incremental - Prototype v0.4.0.1-EX - Made by TehAarex<br>
 				Inspired by <a href="https://www.roblox.com/games/9292879820">Grass Cutting Incremental</a>,
 				<a href="https://mrredshark77.github.io/Really-Grass-Cutting-Incremental/">Original by MrRedShark77</a><br>
 				<b class="red">Warning! Recommended size is 1920x1080! You may change zoom!</b><br><br>
@@ -215,14 +215,14 @@
                     <div id="sc_desc_div">
                         <div id="sc_title"></div>
                         <div id="sc_desc"></div><br>
-                        <button onclick="tmp.sc_choosed = [null,null]">Cancel</button>
-                        <button onclick="buySCUpgrade(tmp.sc_choosed[0],tmp.sc_choosed[1])">Buy 1</button>
-                        <button onclick="buyNextSCUpgrade(tmp.sc_choosed[0],tmp.sc_choosed[1])">Buy Next</button>
-                        <button onclick="buyMaxSCUpgrade(tmp.sc_choosed[0],tmp.sc_choosed[1])">Buy Max</button>
+                        <button onclick="tmp.sc_choosed = [null,null]">Close</button>
+                        <button id="sc_upg_buy" onclick="buySCUpgrade(tmp.sc_choosed[0],tmp.sc_choosed[1])">Buy 1</button>
+                        <button id="sc_upg_next" onclick="buyNextSCUpgrade(tmp.sc_choosed[0],tmp.sc_choosed[1])">Buy Next</button>
+                        <button id="sc_upg_max" onclick="buyMaxSCUpgrade(tmp.sc_choosed[0],tmp.sc_choosed[1])">Buy Max</button>
                     </div><div>
-                        <button onclick="tmp.sc_tab = 'auto'">Automation Tree</button>
-                        <button onclick="tmp.sc_tab = 'speed'">Speed Tree</button>
-                        <button onclick="tmp.sc_tab = 'progress'">Progession Tree</button>
+                        <button onclick="tmp.sc_tab = 'auto'">Automation</button>
+                        <button onclick="tmp.sc_tab = 'speed'">Speed</button>
+                        <button onclick="tmp.sc_tab = 'progress'">Progression</button>
                     </div>
                 </div><div style="position: absolute; right: 5px; top: 5px;">
                     <span id="starAmt">0</span> Stars

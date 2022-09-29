@@ -1,6 +1,6 @@
 function E(x){return new Decimal(x)};
 
-const VER = 0.0400
+const VER = 0.040001
 const EINF = Decimal.dInf
 
 Math.lerp = function (value1, value2, amount) {
@@ -151,7 +151,6 @@ function getPlayerData() {
 
         moonstone: 0,
         grassskip: 0,
-
         gsUnl: false,
 
         star_chart: {
@@ -174,6 +173,7 @@ function getPlayerData() {
 function wipe(reload=false) {
     if (reload) {
         wipe()
+        resetMap()
         save()
         resetTemp()
         loadGame(false)
@@ -339,6 +339,8 @@ function loadGame(start=true, gotNaN=false) {
     if (start) {
         for (let x = 0; x < 50; x++) updateTemp()
         //for (let x = 0; x < 10; x++) createGrass()
+        resetMap()
+        updateHTML()
         grassCanvas()
         treeCanvas()
         tmp.el.loading.el.remove()

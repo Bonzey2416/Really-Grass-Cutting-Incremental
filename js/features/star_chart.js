@@ -31,7 +31,7 @@ const STAR_CHART = {
             branch: [0],
 
             title: "Multi Grasshop",
-            desc: `Allow grasshopping multiple times. [not implemented]`,
+            desc: `Allow grasshopping multiple times.`,
 
             icon: ['Icons/Grasshop2','Icons/StarAuto'],
                             
@@ -64,7 +64,7 @@ const STAR_CHART = {
             branch: [1],
 
             title: "Multi Grass-Skip",
-            desc: `Allow grass-skipping multiple times. [not implemented]`,
+            desc: `Allow grass-skipping multiple times.`,
 
             icon: ['Icons/GrassSkip','Icons/StarAuto'],
                             
@@ -242,7 +242,7 @@ const STAR_CHART = {
             branch: [0],
 
             title: "Beyond Foundry",
-            desc: `Uncap the limit of Foundry effect, but softcap its effect at maxed effect. [not implemented]`,
+            desc: `Uncap the limit of Foundry effect, but softcap its effect at maxed effect.`,
 
             icon: ['Icons/Foundry','Icons/StarSpeed'],
                             
@@ -454,10 +454,12 @@ el.setup.star_chart = _=>{
                     h2 += `
                     <div class="sc_upg_ctn" id="sc_upg_${id}${i}" onclick="tmp.sc_choosed = ['${id}',${i}]">`
                     for (ic in icon) h2 += `<img draggable="false" src="${"images/"+icon[ic]+".png"}">`
+				    h2 += `<img id="sc_upg_${id}${i}_max_base" draggable="false" src="${"images/max.png"}">`
                     
                     h2 += `
                         <div id="sc_upg_${id}${i}_cost" class="scu_cost">??? Stars</div>
                         <div id="sc_upg_${id}${i}_amt" class="scu_amt">0</div>
+				        <div class="upg_max" id="sc_upg_${id}${i}_max" class="upg_max">Maxed!</div>
                     </div>
                     `
                 }
@@ -590,7 +592,7 @@ function updateStarChart() {
         let tu = STAR_CHART[id][i]
         let amt = player.star_chart[id][i]||0
 
-        tmp.el.sc_title.setHTML(`[${id}-#${i}] <h3>${tu.title}</h3>`)
+        tmp.el.sc_title.setHTML(`[${id}-${i+1}] <h3>${tu.title}</h3>`)
 
         let h = `
         Level <b class="yellow">${format(amt,0)}${tt.max[i] < Infinity ? ` / ${format(tt.max[i],0)}` : ""}</b><br>
@@ -599,17 +601,28 @@ function updateStarChart() {
 
         if (tu.effDesc) h += '<br>Effect: <span class="cyan">'+tu.effDesc(tt.eff[i])+"</span>"
 
+        let canBuy = Decimal.gte(star, tt.cost[i])
+        let hasBuy25 = (Math.floor(amt / 25) + 1) * 25 < tt.max[i]
+        let hasMax = amt + 1 < tt.max[i]
+
         if (amt < tt.max[i]) {
-            let m = Math.min(25,tt.max[i]-Math.floor(amt/25)*25)
-            let cost2 = tu.costOnce?Decimal.mul(tt.cost[i],m-amt%m):tu.cost((Math.floor(amt/m)+1)*m-1)//upg.cost(amt+25)
-            
-            h += `
-            <br><span class="${Decimal.gte(star,cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} Stars</span>
-            <br><span class="${Decimal.gte(star,tt.cost[i])?"green":"red"}">Cost: ${format(tt.cost[i],0)} Stars</span>
-            ` // <br>You have ${format(res,0)} Stars
-        }
+            let cost2 = tu.costOnce?Decimal.mul(tt.cost[i],25-amt%25):tu.cost((Math.floor(amt/25)+1)*25-1)
+            let cost3 = tu.costOnce?Decimal.mul(tt.cost[i],tt.max[i]-amt):tu.cost(tt.max[i]-1)
+            if (hasBuy25) h += `<br><span class="${Decimal.gte(star,cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} Stars</span>`
+            else if (hasMax) h += `<br><span class="${Decimal.gte(star,cost3)?"green":"red"}">Cost to max: ${format(cost2,0)} Stars</span>`
+
+            h += `<br><span class="${Decimal.gte(star,tt.cost[i])?"green":"red"}">Cost: ${format(tt.cost[i],0)} Stars</span>`
+        } else h += "<br><b class='pink'>Maxed!</b>"
 
         tmp.el.sc_desc.setHTML(h)
+
+        tmp.el["sc_upg_buy"].setClasses({ locked: !canBuy })
+        tmp.el["sc_upg_buy"].setDisplay(amt < tt.max[i])
+        tmp.el["sc_upg_buy"].setTxt("Buy" + (hasMax ? " 1" : ""))
+        tmp.el["sc_upg_next"].setClasses({ locked: !canBuy })
+        tmp.el["sc_upg_next"].setDisplay(hasBuy25)
+        tmp.el["sc_upg_max"].setClasses({ locked: !canBuy })
+        tmp.el["sc_upg_max"].setDisplay(hasMax)
     }
 
     for (let id in STAR_CHART) {
@@ -631,10 +644,15 @@ function updateStarChart() {
 
             if (id2) {
                 let amt = player.star_chart[id][i]||0
+                let maxed = amt == tt.max[i]
 
-                tmp.el[id2+"_amt"].setTxt(amt)
-                tmp.el[id2+"_cost"].setTxt(amt < tt.max[i] ? format(tt.cost[i],0,6)+" Stars" : "Maxed")
+                tmp.el[id2+"_amt"].setTxt(format(amt,0))
+                tmp.el[id2+"_amt"].setDisplay(!maxed)
+                tmp.el[id2+"_cost"].setDisplay(!maxed)
+                tmp.el[id2+"_cost"].setTxt(format(tt.cost[i],0,6)+" Stars")
                 tmp.el[id2+"_cost"].setClasses({scu_cost: true, locked: star.lt(tt.cost[i]) && amt < tt.max[i]})
+                tmp.el[id2+"_max"].setDisplay(maxed)
+                tmp.el[id2+"_max_base"].setDisplay(maxed)
             }
         }
     }

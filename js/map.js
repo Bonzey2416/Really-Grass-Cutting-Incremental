@@ -1,9 +1,16 @@
 var mapID = 'g'
 var mapLoc = "Grass Field"
-var mapPos = {
-	dim: "earth",
-	earth: [3,3],
-	space: [3,3]
+
+var mapPos
+function resetMap() {
+	mapPos = {
+		dim: "earth",
+		earth: [3,3],
+		space: [3,3]
+	}
+
+	let pos = getMapPos()
+	switchMapPos(pos[0], pos[1], mapPos.dim)
 }
 
 window.addEventListener('keydown', e=>{
@@ -25,8 +32,8 @@ const MAP = {
 	],
 	space: [
 		[null,null,null,null,null,null,null],
-		[null,null,null,'stats',null,null,null],
-		[null,null,null,'opt',null,null,null],
+		[null,null,null,null,null,null,null],
+		[null,null,null,'opt','stats',null,null],
 		[null,null,null,'sc','at',null,null],
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
@@ -114,6 +121,23 @@ function updateMapButton(el, mx, my, dim) {
 }
 
 /* EXTENSION */
+const MAP_COLORS = {
+	opt: "misc",
+	stats: "misc",
+
+	g: "grass",
+	p: "grass",
+	auto: "grass",
+	pc: "pp",
+	chal: "crystal",
+	gh: "gh",
+	fd: "gh",
+	as: "gh",
+	rp: "gh",
+	sc: "gal",
+	at: "gal"
+}
+
 el.update.map_ext = _ => {
 	let pos = getMapPos()
 	let mapId = MAP[mapPos.dim][pos[1]][pos[0]]
@@ -138,23 +162,7 @@ el.update.map_ext = _ => {
 	}
 }
 
-const MAP_COLORS = {
-	opt: "misc",
-	stats: "misc",
-
-	g: "grass",
-	p: "grass",
-	auto: "grass",
-	pc: "pp",
-	chal: "crystal",
-	gh: "gh",
-	fd: "gh",
-	as: "gh",
-	rp: "gh",
-	sc: "gal",
-	at: "gal"
-}
-
+//Locations
 const MAP_LOCS = {
 	opt: "Misc",
 	stats: "Misc",
@@ -238,7 +246,7 @@ const MAP_NOTIFY = {
 	chal: _ => player.sTimes > 0 ? 2 :
 		player.cTimes > 0 ? 1 :
 		0,
-	gh: _ => player.grasshop + (player.level >= MAIN.gh.req() ? 1 : 0),
+	gh: _ => player.gTimes > 0 ? 0 : player.grasshop + (player.level >= MAIN.gh.req() ? 1 : 0),
 	fd: _ => hasUpgrade("factory", 2) ? 3 :
 		hasUpgrade("factory", 1) ? 2 :
 		hasUpgrade("factory", 0) ? 1 :

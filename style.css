@@ -232,8 +232,8 @@ button:not(.locked):hover {
 #astral {
     position: relative;
     width: 400px;
-    border: solid 2px black;
-    background-color: #8a29b1;
+    border: solid 2px #0003;
+    background-color: #3c1457;
     height: 35px;
     font-size: 25px;
     padding: 0 10px;

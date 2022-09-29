@@ -990,7 +990,7 @@ function setupUpgradesHTML(id) {
 			<div id="upg_desc_div_${id}" class="upg_desc ${id}">
 				<div id="upg_desc_${id}"></div>
 				<div style="position: absolute; bottom: 0; width: 100%;">
-					<button onclick="tmp.upg_ch.${id} = -1">Cancel</button>
+					<button onclick="tmp.upg_ch.${id} = -1">Close</button>
 					<button id="upg_buy_${id}" onclick="buyUpgrade('${id}',tmp.upg_ch.${id})">Buy 1</button>
 					<button id="upg_buy_next_${id}" onclick="buyNextUpgrade('${id}',tmp.upg_ch.${id})">Buy Next</button>
 					<button id="upg_buy_max_${id}" onclick="buyMaxUpgrade('${id}',tmp.upg_ch.${id})">Buy Max</button>
@@ -1061,22 +1061,30 @@ function updateUpgradesHTML(id) {
 
                 if (upg.effDesc) h += '<br>Effect: <span class="cyan">'+upg.effDesc(tu.eff[ch])+"</span>"
 
+                let canBuy = Decimal.gte(tmp.upg_res[upg.res], tu.cost[ch])
+                let hasBuy25 = (Math.floor(amt / 25) + 1) * 25 < tu.max[ch]
+                let hasMax = amt + 1 < tu.max[ch]
+
                 if (amt < tu.max[ch]) {
-                    let m = Math.min(25,tu.max[ch]-Math.floor(amt/25)*25)
-                    let cost2 = upg.costOnce?Decimal.mul(tu.cost[ch],25-amt%25):upg.cost((Math.floor(amt/25)+1)*25-1)//upg.cost(amt+25)
-                    if (tu.max[ch] >= 25) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} ${dis}</span>`
+                    let cost2 = upg.costOnce?Decimal.mul(tu.cost[ch],25-amt%25):upg.cost((Math.floor(amt/25)+1)*25-1)
+                    let cost3 = upg.costOnce?Decimal.mul(tu.cost[ch],tu.max[ch]-amt):upg.cost(tu.max[ch]-1)
+                    if (hasBuy25) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} ${dis}</span>`
+                    else if (hasMax) h += `<br><span class="${Decimal.gte(tmp.upg_res[upg.res],cost3)?"green":"red"}">Cost to max: ${format(cost3,0)} ${dis}</span>`
 
                     h += `
-                    <br><span class="${Decimal.gte(tmp.upg_res[upg.res],tu.cost[ch])?"green":"red"}">Cost: ${format(tu.cost[ch],0)} ${dis}</span>
+                    <br><span class="${canBuy?"green":"red"}">Cost: ${format(tu.cost[ch],0)} ${dis}</span>
                     <br>You have ${format(res,0)} ${dis}
                     `
                 } else h += "<br><b class='pink'>Maxed!</b>"
 
                 tmp.el["upg_desc_"+id].setHTML(h)
-                tmp.el["upg_buy_"+id].setClasses({ locked: Decimal.lt(tmp.upg_res[upg.res],tu.cost[ch]) })
-                tmp.el["upg_buy_next_"+id].setClasses({ locked: Decimal.lt(tmp.upg_res[upg.res],tu.cost[ch]) })
-                tmp.el["upg_buy_max_"+id].setClasses({ locked: Decimal.lt(tmp.upg_res[upg.res],tu.cost[ch]) })
-                tmp.el["upg_buy_next_"+id].setDisplay(tu.max[ch] >= 25)
+                tmp.el["upg_buy_"+id].setClasses({ locked: !canBuy })
+                tmp.el["upg_buy_"+id].setDisplay(amt < tu.max[ch])
+                tmp.el["upg_buy_"+id].setTxt("Buy" + (hasMax ? " 1" : ""))
+                tmp.el["upg_buy_next_"+id].setClasses({ locked: !canBuy })
+                tmp.el["upg_buy_next_"+id].setDisplay(hasBuy25)
+                tmp.el["upg_buy_max_"+id].setClasses({ locked: !canBuy })
+                tmp.el["upg_buy_max_"+id].setDisplay(hasMax)
             }
 
             if (ch < 0) {

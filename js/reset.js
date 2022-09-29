@@ -13,6 +13,7 @@ el.setup.reset = _=>{
                 ${r.resetDesc}
                 <div style="position: absolute; bottom: 0; width: 100%;">
                     <div id="reset_gain_${x}"></div>
+                    ${r.btns ?? ''}
                     <button id="reset_btn_${x}" onclick="RESET.${x}.reset()">${(r.hotkey ? `(${r.hotkey}) ` : ``) + r.resetBtn}</button>
                 </div>
             </div>
