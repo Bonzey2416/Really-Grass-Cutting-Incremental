@@ -452,7 +452,7 @@ el.setup.star_chart = _=>{
                     else icon.push('Icons/Placeholder')
 
                     h2 += `
-                    <div class="sc_upg_ctn" id="sc_upg_${id}${i}" onclick="tmp.sc_choosed = ['${id}',${i}]">`
+                    <div class="sc_upg_ctn" id="sc_upg_${id}${i}" onclick="clickSCUpgrade('${id}', ${i})">`
                     for (ic in icon) h2 += `<img draggable="false" src="${"images/"+icon[ic]+".png"}">`
 				    h2 += `<img id="sc_upg_${id}${i}_max_base" draggable="false" src="${"images/max.png"}">`
                     
@@ -519,6 +519,11 @@ function updateSCTemp() {
 tmp_update.push(_=>{
     updateSCTemp()
 })
+
+function clickSCUpgrade(id,x) {
+	if (shiftDown || (tmp.sc_choosed[0] == id && tmp.sc_choosed[1] == x)) buyMaxSCUpgrade(id, x)
+	else tmp.sc_choosed = [id, x]
+}
 
 function buySCUpgrade(id,x) {
     let tu = tmp.star_chart[id]

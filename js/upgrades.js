@@ -882,44 +882,51 @@ const UPGS = {
 
 const UPGS_SCOST = {}
 
+function clickUpgrade(id, x) {
+	if (shiftDown) buyMaxUpgrade(id, x)
+	else tmp.upg_ch[id] = x
+}
+
 function buyUpgrade(id, x, type = "once") {
+	//Upgrade Data
 	let tu = tmp.upgs[id]
-	if (tu.cannotBuy) return
-
 	let upg = UPGS[id].ctn[x]
-	let upgData = player.upgs[id]
-	let resDis = upg.res
-	let res = tmp.upg_res[resDis]
 	let costOnce = upg.costOnce
-	let numInc = isResNumber.includes(resDis)
 
+	//Resource Data
+	let resDis = upg.res
+	let resNum = isResNumber.includes(resDis)
+	let res = tmp.upg_res[resDis]
 	if (E(tu.cost[x]).gt(res)) return
-	if (type == "auto") res = numInc ? Math.max(res / tu.unlLength, tu.cost[x]) : res.div(tu.unlLength).max(tu.cost[x])
 
+	//Upgrade Save
+	let upgData = player.upgs[id]
 	let amt = upgData[x] || 0
 	if (amt >= tu.max[x]) return
 
-	let bulk = type == "auto" ? upg.bulk(res) : tu.bulk[x]
+	//Determine Levels
+	let bulk = tu.bulk[x]
 	if (costOnce) bulk += amt
 	if (type == "next") bulk = Math.min(bulk, Math.ceil((amt + 1) / 25) * 25)
 	if (type == "once") bulk = amt + 1
-	else bulk = Math.floor(bulk)
+	else bulk = Math.max(Math.floor(bulk), amt + 1)
 	bulk = Math.min(bulk, tu.max[x])
-
-	if (amt >= bulk) return
-
-	let [p,q] = UPG_RES[resDis][1]()
-	let cost = costOnce ? tu.cost[x] * (bulk - amt) : upg.cost(bulk-1)
-
 	upgData[x] = bulk
-	if (resDis == 'perk') {
-		player.spentPerk += cost
-		tmp.perkUnspent = Math.max(player.maxPerk-player.spentPerk,0)
-	} else if (!tu.noSpend) {
-		p[q] = numInc ? Math.max(p[q]-cost, 0) : p[q].sub(cost).max(0)
+
+	//Spend Resource
+	if (!tu.noSpend) {
+		let [p,q] = UPG_RES[resDis][1]()
+		let cost = costOnce ? tu.cost[x] * (bulk - amt) : upg.cost(bulk-1)
+
+		if (resDis == 'perk') {
+			player.spentPerk += cost
+			tmp.perkUnspent = Math.max(player.maxPerk - player.spentPerk, 0)
+		} else {
+			p[q] = resNum ? Math.max(p[q]-cost, 0) : p[q].sub(cost).max(0)
+		}
+		updateUpgResource(resDis)
 	}
 
-	updateUpgResource(resDis)
 	updateUpgTemp(id)
 }
 
@@ -927,8 +934,15 @@ function buyNextUpgrade(id, x) {
 	buyUpgrade(id, x, "next")
 }
 
-function buyMaxUpgrade(id, x, auto) {
-	buyUpgrade(id, x, auto ? "auto" : "max")
+function buyMaxUpgrade(id, x) {
+	buyUpgrade(id, x, "max")
+}
+
+function buyAllUpgrades(id) {
+    let upgs = UPGS[id]
+    for (let [x, upg] of Object.entries(upgs.ctn)) {
+        if (upg.unl ? upg.unl() : true) buyUpgrade(id, x, "max")
+    }
 }
 
 function switchAutoUpg(id) {
@@ -981,7 +995,7 @@ function setupUpgradesHTML(id) {
 
 		html += `
 			<div style="height: 40px;">
-				${upgs.title} <button class="buyAllUpg" onclick="buyMaxUpgrades('${id}')">Buy All</button><button class="buyAllUpg" id="upg_auto_${id}" onclick="switchAutoUpg('${id}')">Auto: OFF</button> ${upgs.btns ?? ''}
+				${upgs.title} <button class="buyAllUpg" onclick="buyAllUpgrades('${id}')">Buy All</button><button class="buyAllUpg" id="upg_auto_${id}" onclick="switchAutoUpg('${id}')">Auto: OFF</button> ${upgs.btns ?? ''}
 			</div><div id="upgs_ctn_${id}" class="upgs_ctn">
 
 			</div><div style="height: 40px;" id="upg_under_${id}">
@@ -1012,7 +1026,7 @@ function setupUpgradesHTML(id) {
 			else icon.push('Icons/Placeholder')
 
 			html += `
-				<div class="upg_ctn" id="upg_ctn_${id}${x}" onclick="tmp.upg_ch.${id} = ${x}">`
+				<div class="upg_ctn" id="upg_ctn_${id}${x}" onclick="clickUpgrade('${id}', ${x})">`
 			for (i in icon) html +=
 				`<img draggable="false" src="${"images/"+icon[i]+".png"}">`
 			html += `
@@ -1123,15 +1137,6 @@ function upgEffect(id,x,def=1) { return tmp.upgs[id].eff[x] || def }
 
 function resetUpgrades(id) {
     for (let x in UPGS[id].ctn) player.upgs[id][x] = 0
-}
-
-function buyMaxUpgrades(id) {
-    let upgs = UPGS[id]
-    for (let x = 0; x < UPGS[id].ctn.length; x++) {
-        let upg = upgs.ctn[x]
-
-        if (upg.unl?upg.unl():true) buyMaxUpgrade(id,x,true)
-    }
 }
 
 function updateUpgResource(id) {

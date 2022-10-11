@@ -5,16 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Really Grass Cutting Incremental</title>
 
-    <script src="js/break_eternity.js"></script>
-    <script src="js/elements.js"></script>
-    <script src="js/saves.js"></script>
-    <script src="js/canvas.js"></script>
-    <script src="js/format.js"></script>
-    <script src="js/temp.js"></script>
+    <script src="js/utils/break_eternity.js"></script>
+    <script src="js/utils/Element.js"></script>
+    <script src="js/utils/format.js"></script>
+    <script src="js/utils/saves.js"></script>
+    <script src="js/utils/utils.js"></script>
 
+    <script src="js/temp.js"></script>
+    <script src="js/canvas.js"></script>
     <script src="js/map.js"></script>
-    <script src="js/upgrades.js"></script>
     <script src="js/reset.js"></script>
+    <script src="js/upgrades.js"></script>
 
     <script src="js/calc.js"></script>
     <script src="js/main.js"></script>
@@ -114,11 +115,13 @@
 				<button onclick="toggleLowGrass()">Grass cap: <span id="grassCap">Unlimited</span></button>
 				<button onclick="toggleOption('hideUpgOption')">Hide maxed: <span id="hideUpgOption"></span></button>
 				<button id="hideMilestoneBtn" onclick="toggleOption('hideMilestone')">Show milestones: <span id="hideMilestone"></span></button><br><br>
-				Really Grass Cutting Incremental - Prototype v0.4.0.1-EX - Made by TehAarex<br>
+				Really Grass Cutting Incremental - Extension 11 - v0.4.0.1 - Made by <a href="https://aarextiaokhiao.github.io/">TehAarex</a><br>
 				Inspired by <a href="https://www.roblox.com/games/9292879820">Grass Cutting Incremental</a>,
 				<a href="https://mrredshark77.github.io/Really-Grass-Cutting-Incremental/">Original by MrRedShark77</a><br>
 				<b class="red">Warning! Recommended size is 1920x1080! You may change zoom!</b><br><br>
-                Endgame: Level 1500+, Tier 120+; Level 400+ in Anti-Realm
+                Endgame: Level 1500+, Tier 120+; Level 400+ in Anti-Realm<br><br>
+
+				Hint: Use arrow keys / WASD keys to move through the map. Hold shift to upgrade instantly.
             </div><div id="map_div_stats">
 				<span id="time"></span><br>
 				<h1>Reset Layers</h1>
@@ -242,7 +245,7 @@
             </div>
         </div>
         <div style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);">
-            <button onclick="go_to = !go_to">Map</button>
+            <button id="mapBtn" onclick="go_to = !go_to">Map</button>
             <button id="lMap" onclick="moveMap(-1,0)" class="locked">◀</button>
             <button id="rMap" onclick="moveMap(1,0)" class="locked">▶</button>
             <button id="uMap" onclick="moveMap(0,-1)" class="locked">▲</button>

@@ -8,7 +8,7 @@ el.setup.reset = _=>{
             let r = RESET[x]
 
             let html = `
-            <div>
+            <div id="reset_info_div_${x}">
                 <h2>${r.title}</h2><br>
                 ${r.resetDesc}
                 <div style="position: absolute; bottom: 0; width: 100%;">
@@ -35,6 +35,7 @@ function updateResetHTML(id) {
     if (unl) {
         let req = r.req?r.req():true
 
+        tmp.el["reset_info_div_"+id].setDisplay(req)
         tmp.el["reset_req_div_"+id].setDisplay(!req)
         tmp.el["reset_req_desc_"+id].setHTML(r.reqDesc())
 

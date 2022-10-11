@@ -180,7 +180,7 @@ RESET.ap = {
 
     title: `Anonymity`,
     resetBtn: `Anonymity`,
-    hotkey: `A`,
+    hotkey: `P`,
 
     reset(force=false) {
         if (this.req()||force) {

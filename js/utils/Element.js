@@ -1,12 +1,8 @@
-var el = {
-	setup: {},
-	update: {},
-}
-
 class Element {
 	constructor(el) {
 		this.id = typeof el == "string" ? el : el.id;
 		this.el = document.getElementById(this.id);
+		this.parent = null
 	}
 
 	get style() {
@@ -39,6 +35,13 @@ class Element {
 	}
 	static setDisplay(id, bool) {
 		new Element(id).setDisplay(bool);
+	}
+
+	setTooltip(name) {
+		this.el.setAttribute("tooltip", name)
+	}
+	static setTooltip(id, name) {
+		new Element(id).setTooltip(name);
 	}
 
 	addClass(name) {
@@ -124,6 +127,28 @@ class Element {
 	static setSize(id, h, w) {
 		new Element(id).setSize(h, w);
 	}
+
+	append(child) {
+		this.el.append(child)
+	}
+	static append(id, child) {
+		new Element(id).append(child)
+	}
+
+	appendHTML(child) {
+		if (elm[child].parent == this.id) return
+		elm[child].parent = this.id
+		this.el.append(elm[child].el)
+	}
+	static appendHTML(id, child) {
+		new Element(id).appendHTML(child)
+	}
+}
+
+//ADDENDUM
+var el = {
+	setup: {},
+	update: {},
 }
 
 function setupHTML() {

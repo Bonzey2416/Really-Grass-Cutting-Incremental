@@ -29,7 +29,7 @@ function calc(dt) {
 
     player.maxPerk = Math.max(player.maxPerk, tmp.perks)
 
-    for (let x in UPGS) if (tmp.upgs[x].autoUnl && !(['grass','pp','crystal'].includes(x) && decel) && !(['aGrass'].includes(x) && !decel)) if (player.autoUpg[x]) buyMaxUpgrades(x,true)
+    for (let x in UPGS) if (tmp.upgs[x].autoUnl && !(['grass','pp','crystal'].includes(x) && decel) && !(['aGrass'].includes(x) && !decel)) if (player.autoUpg[x]) buyAllUpgrades(x,true)
 
     if (tmp.ppGainP > 0 && player.level >= 30 && !decel) player.pp = player.pp.add(tmp.ppGain.mul(dt*tmp.ppGainP))
     if (tmp.crystalGainP > 0 && player.level >= 100 && !decel) player.crystal = player.crystal.add(tmp.crystalGain.mul(dt*tmp.crystalGainP))

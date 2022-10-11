@@ -1,5 +1,3 @@
-var player = {}, date = Date.now(), diff = 0;
-
 function loop() {
     diff = Date.now() - date
     updateTemp()
@@ -8,6 +6,7 @@ function loop() {
     date = Date.now();
 }
 
+var player = {}, date = Date.now(), diff = 0;
 const MAIN = {
     grassGain() {
         let x = Decimal.mul(5,upgEffect('grass',0)).mul(tmp.tier.mult)
@@ -239,17 +238,21 @@ el.update.main = _=>{
     tmp.el.grassAmt.setHTML(g.format(0))
     tmp.el.grassGain.setHTML(tmp.autoCutUnlocked ? formatGain(g,tmp.grassGain.div(tmp.autocut).mul(tmp.autocutBonus).mul(tmp.autocutAmt)) : "")
 
-    tmp.el.level_top_bar.changeStyle("width",tmp.level.percent*100+"%")
-    tmp.el.level_top_info.setHTML(`Level <b class="cyan">${format(player.level,0)}</b> (${formatPercent(tmp.level.percent)})`)
+    let level_unl = !inSpace()
+    tmp.el.level.setDisplay(level_unl)
+    if (level_unl) {
+        tmp.el.level_top_bar.changeStyle("width",tmp.level.percent*100+"%")
+        tmp.el.level_top_info.setHTML(`Level <b class="cyan">${format(player.level,0)}</b> (${formatPercent(tmp.level.percent)})`)
+    }
 
-    let tier_unl = player.pTimes > 0
+    let tier_unl = player.pTimes > 0 && !inSpace()
     tmp.el.tier.setDisplay(tier_unl)
     if (tier_unl) {
         tmp.el.tier_top_bar.changeStyle("width",tmp.tier.percent*100+"%")
         tmp.el.tier_top_info.setHTML(`Tier <b class="yellow">${format(player.tier,0)}</b> (${formatPercent(tmp.tier.percent)})`)
     }
 
-    let astral_unl = player.gTimes > 0
+    let astral_unl = player.gTimes > 0 && inSpace()
     tmp.el.astral.setDisplay(astral_unl)
     if (astral_unl) {
         tmp.el.astral_top_bar.changeStyle("width",tmp.astral.percent*100+"%")
@@ -271,6 +274,7 @@ el.update.main = _=>{
             tmp.el.tier_mult.setTxt(formatMult(tmp.tier.mult,0)+" → "+formatMult(MAIN.tier.mult(player.tier+1),0)+" multiplier")
         }
 
+        astral_unl = player.gTimes > 0
         tmp.el.astral_div.setDisplay(astral_unl)
         if (astral_unl) {
             tmp.el.astral_amt.setTxt(format(player.astral,0))
@@ -346,13 +350,47 @@ tmp_update.push(_=>{
     if (player.grasshop >= 6) tmp.platChance *= 2
 })
 
+let shiftDown = false
 window.addEventListener('keydown', function(event) {
+	if (event.keyCode == 16) {
+		shiftDown = true;
+		return
+	}
 	switch (event.key) {
 		case "p":
-			RESET.pp.reset();
+			if (shiftDown) RESET.rocket_part.reset();
+			else if (player.decel) RESET.ap.reset();
+			else RESET.pp.reset();
 			break;
 		case "c":
-			RESET.crystal.reset();
+			if (player.decel) RESET.oil.reset();
+			else RESET.crystal.reset();
+			break;
+		case "g":
+			if (shiftDown) RESET.gal.reset();
+			else RESET.gh.reset();
+			break;
+		case "s":
+			if (shiftDown) RESET.steel.reset();
+			break;
+		case "f":
+			ROCKET.create()
+			break;
+	}
+}, false);
+window.addEventListener('keyup', function(event) {
+	if (event.keyCode == 16) {
+		shiftDown = false;
+		return
+	}
+	switch (event.key) {
+		case "p":
+			if (player.decel) RESET.ap.reset();
+			else RESET.pp.reset();
+			break;
+		case "c":
+			if (player.decel) RESET.oil.reset();
+			else RESET.crystal.reset();
 			break;
 		case "g":
 			RESET.gh.reset();
@@ -360,11 +398,8 @@ window.addEventListener('keydown', function(event) {
 		case "s":
 			RESET.steel.reset();
 			break;
-		case "a":
-			RESET.ap.reset();
-			break;
-		case "l":
-			RESET.oil.reset();
+		case "f":
+			RESET.steel.reset();
 			break;
 	}
 }, false);

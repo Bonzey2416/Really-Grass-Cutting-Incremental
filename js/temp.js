@@ -4,8 +4,8 @@ var tmp_update = []
 function resetTemp() {
     keep = []
     tmp = {
+	    el: tmp.el,
         map_notify: {},
-        space: false,
 
         sc_tab: 'auto',
         sc_choosed: [null,null],

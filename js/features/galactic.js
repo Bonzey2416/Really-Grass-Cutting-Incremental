@@ -22,6 +22,7 @@ RESET.gal = {
 
     resetDesc: `Reset EVERYTHING except rocket fuel upgrades.<br>First galactic breaks rocket part's limit.<br>Gain more Stars based on rocket parts, starting at 10.`,
     resetGain: _=> `Gain <b>${tmp.starGain.format(0)}</b> Stars`,
+    hotkey: `Shift+G`,
 
     title: `Galactic`,
     resetBtn: `Go Galaxy!`,

@@ -160,6 +160,7 @@ button:not(.locked):hover {
 	height: 120px;
 	font-size: 16px
 }
+.notify,
 .map_btn.notify {
 	background: maroon;
 	color: red

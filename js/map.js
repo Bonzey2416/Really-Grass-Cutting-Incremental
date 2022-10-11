@@ -14,6 +14,7 @@ function resetMap() {
 }
 
 window.addEventListener('keydown', e=>{
+	if (shiftDown) return
 	if (e.keyCode == 65 || e.keyCode == 37) moveMap(-1,0)
 	if (e.keyCode == 68 || e.keyCode == 39) moveMap(1,0)
 	if (e.keyCode == 87 || e.keyCode == 38) moveMap(0,-1)
@@ -87,7 +88,7 @@ function switchMapPos(mx,my,dim) {
 function switchMapId(id) {
 	mapID = id
 	delete player.map_notify[id]
-	showLoc(MAP_LOCS[id])
+	if (tmp.el) showLoc(MAP_LOCS[id])
 }
 
 el.update.map = _=>{
@@ -143,6 +144,7 @@ el.update.map_ext = _ => {
 	let mapId = MAP[mapPos.dim][pos[1]][pos[0]]
 	tmp.el.position.setTxt(`(${pos[0]},${pos[1]}) ${MAP_LOCS[mapId]}: ${GO_TO_NAMES[mapId]}`)
 
+	tmp.el.mapBtn.setClasses({ notify: Object.keys(player.map_notify).length > 0 })
 	tmp.el.map_div.setDisplay(go_to)
 	if (go_to) {
 		for (const [dim, d_dim] of Object.entries(MAP)) {
