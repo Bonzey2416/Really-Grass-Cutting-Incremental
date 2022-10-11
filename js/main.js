@@ -352,11 +352,8 @@ tmp_update.push(_=>{
 
 let shiftDown = false
 window.addEventListener('keydown', function(event) {
-	if (event.keyCode == 16) {
-		shiftDown = true;
-		return
-	}
-	switch (event.key) {
+	if (event.keyCode == 16) shiftDown = true;
+	switch (event.key.toLowerCase()) {
 		case "p":
 			if (shiftDown) RESET.rocket_part.reset();
 			else if (player.decel) RESET.ap.reset();
@@ -368,6 +365,7 @@ window.addEventListener('keydown', function(event) {
 			break;
 		case "g":
 			if (shiftDown) RESET.gal.reset();
+			else if (player.decel) RESET.gs.reset();
 			else RESET.gh.reset();
 			break;
 		case "s":
@@ -381,25 +379,5 @@ window.addEventListener('keydown', function(event) {
 window.addEventListener('keyup', function(event) {
 	if (event.keyCode == 16) {
 		shiftDown = false;
-		return
-	}
-	switch (event.key) {
-		case "p":
-			if (player.decel) RESET.ap.reset();
-			else RESET.pp.reset();
-			break;
-		case "c":
-			if (player.decel) RESET.oil.reset();
-			else RESET.crystal.reset();
-			break;
-		case "g":
-			RESET.gh.reset();
-			break;
-		case "s":
-			RESET.steel.reset();
-			break;
-		case "f":
-			RESET.steel.reset();
-			break;
 	}
 }, false);

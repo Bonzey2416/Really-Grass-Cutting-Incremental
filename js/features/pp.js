@@ -179,7 +179,7 @@ RESET.ap = {
     resetGain: _=> `Gain <b>${tmp.apGain.format(0)}</b> Anonymity Points`,
 
     title: `Anonymity`,
-    resetBtn: `Anonymity`,
+    resetBtn: `Anonymity?`,
     hotkey: `P`,
 
     reset(force=false) {

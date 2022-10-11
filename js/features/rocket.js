@@ -239,7 +239,7 @@ RESET.rocket_part = {
     resetBtn: `Create Rocket Part`,
 
     reset(force=false) {
-        if (player.steel.gte(tmp.rp_req[0])&&player.rocket.total_fp >= tmp.rp_req[1]||force) {
+        if ((player.steel.gte(tmp.rp_req[0]) && player.rocket.total_fp >= tmp.rp_req[1]) || force) {
             if (!force) {
                 player.rocket.part++
                 player.momentum++

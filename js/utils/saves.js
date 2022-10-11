@@ -113,12 +113,6 @@ function safecheckSave(data) {
 		alert("Your save fails to load, because it got NaNed!")
 		return false
 	}
-
-	const ver_check = data.tb_ver || data.ver || 0
-	if (ver_check < 1.02 && (data.decel ? data.level : data.aRes.level) >= 300) {
-		alert("Your save fails to load, because it got inflated!")
-		return false
-	}
 	return true
 }
 

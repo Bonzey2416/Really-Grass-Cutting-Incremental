@@ -154,7 +154,8 @@ RESET.gs = {
 
     title: `Grass-Skip`,
     btns: `<button id="multGSBtn" onclick="player.gsMult = !player.gsMult">Multi: <span id="multGSOption">OFF</span></button>`,
-    resetBtn: `Grass-Skip!`,
+    resetBtn: `Grass-Skip?`,
+    hotkey: `G`,
 
     reset(force=false) {
         if ((this.req()&&player.level>=tmp.gs_req)||force) {

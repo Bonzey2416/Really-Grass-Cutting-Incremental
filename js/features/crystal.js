@@ -220,7 +220,7 @@ RESET.oil = {
     resetGain: _=> `Gain <b>${tmp.oilGain.format(0)}</b> Oil`,
 
     title: `Liquefy`,
-    resetBtn: `Liquefy`,
+    resetBtn: `Liquefy?`,
     hotkey: `C`,
 
     reset(force=false) {
