@@ -8,7 +8,9 @@ MAIN.gal = {
 
         x = x.mul(upgEffect('moonstone',4))
 
-        if (player.lowGH <= 24) x = x.mul(getAGHEffect(3))
+        if (player.lowGH <= 12) x = x.mul(getAGHEffect(4))
+
+        x = x.mul(upgEffect('sfrgt',2))
 
         return x.floor()
     },
@@ -32,7 +34,9 @@ RESET.gal = {
             if (!force) {
                 player.stars = player.stars.add(tmp.starGain)
                 player.gTimes++
-                player.lowGH = Math.min(player.lowGH,player.grasshop)
+
+                if (player.lowGH <= 0 || player.grasshop <= 0) player.lowGH = Math.min(player.lowGH,-player.grassskip)
+                else player.lowGH = Math.min(player.lowGH,player.grasshop)
 
                 mapPos.earth = [3, 3]
                 goToSpace()
@@ -81,7 +85,7 @@ RESET.gal = {
         player.grassskip = 0
         player.plat = 0
 
-        if (player.lowGH > 32) player.chal.comp = []
+        if (player.lowGH > 28) player.chal.comp = []
 
         resetUpgrades('ap')
         resetUpgrades('oil')

@@ -37,6 +37,7 @@ function getPlayerData() {
 		},
 
 		grasshop: 0,
+		ghMult: false,
 
 		steel: E(0),
 		sTimes: 0,
@@ -85,13 +86,20 @@ function getPlayerData() {
 
 		moonstone: 0,
 		grassskip: 0,
+		bestGS: 0,
+
 		gsUnl: false,
+		gsMult: false,
 
 		star_chart: {
 			auto: [],
 			speed: [],
 			progress: [],
 		},
+
+		fTimes: 0,
+		fun: E(0),
+		SFRGT: E(0),
 
 		time: 0,
 		map_notify: {},
@@ -116,8 +124,8 @@ function safecheckSave(data) {
 	return true
 }
 
-const VER = 0.040001
-const EX_COMMIT = 11
+const VER = 0.0401
+const EX_COMMIT = 11.02
 function loadPlayer(data) {
 	player = deepUndefinedAndDecimal(data, getPlayerData())
 	convertStringToDecimal()
@@ -147,6 +155,9 @@ function loadPlayer(data) {
 
 		console.log('guh?')
 	}
+    if (player.version < 0.401) {
+        player.bestGS = Math.max(player.bestGS, player.grassskip)
+    }
 	player.version = VER
 }
 
