@@ -650,10 +650,13 @@ button:not(.locked):hover {
 .upg_desc.funnyMachine,
 .upgs_div.funnyMachine,
 .upg_desc.fundry,
-.upgs_div.fundry,
+.upgs_div.fundry {
+    background-color: #ffff79;
+}
+
 .upg_desc.sfrgt,
 .upgs_div.sfrgt {
-    background-color: #ffff79;
+    background-color: #bfff79;
 }
 
 .milestone_ctns {

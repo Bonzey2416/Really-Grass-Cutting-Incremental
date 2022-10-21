@@ -98,6 +98,7 @@ function getPlayerData() {
 		},
 
 		fTimes: 0,
+		fTime: 0,
 		fun: E(0),
 		SFRGT: E(0),
 
@@ -125,7 +126,7 @@ function safecheckSave(data) {
 }
 
 const VER = 0.0401
-const EX_COMMIT = 11.02
+const EX_COMMIT = 11.03
 function loadPlayer(data) {
 	player = deepUndefinedAndDecimal(data, getPlayerData())
 	convertStringToDecimal()

@@ -32,6 +32,7 @@ RESET.fun = {
 
     title: `Funify`,
     resetBtn: `Funify!`,
+    hotkey: `Shift+S`,
 
     reset(force=false) {
         if (this.req()||force) {

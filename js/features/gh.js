@@ -280,7 +280,7 @@ el.setup.milestones = _=>{
     t = new Element("milestone_div_agh")
     h = ""
 
-    h += `<div id="gh_mil_ctns">Your lowest grasshop is <b id="agh">0</b><div class="milestone_ctns">`
+    h += `<div id="gh_mil_ctns"><span id="agh">0</span><div class="milestone_ctns">`
 
     for (i in MAIN.agh_milestone) {
         let m = MAIN.agh_milestone[i]
@@ -381,7 +381,7 @@ el.update.milestones = _=>{
         }
     }
     if (mapID == 'at') {
-        tmp.el.agh.setHTML(format(player.lowGH,0))
+        tmp.el.agh.setHTML(player.lowGH <= 0 ? "Your highest 0 GH grass-skip is <b>" + format(-player.lowGH, 0) + "</b>" : "Your lowest grasshop is <b>" + format(player.lowGH, 0) + "</b>")
 
         for (let x = 0; x < AGH_MIL_LEN; x++) {
             let m = MAIN.agh_milestone[x]

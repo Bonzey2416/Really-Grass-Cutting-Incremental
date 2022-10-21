@@ -116,7 +116,7 @@
 				<button onclick="toggleLowGrass()">Grass cap: <span id="grassCap">Unlimited</span></button>
 				<button onclick="toggleOption('hideUpgOption')">Hide maxed: <span id="hideUpgOption"></span></button>
 				<button id="hideMilestoneBtn" onclick="toggleOption('hideMilestone')">Show milestones: <span id="hideMilestone"></span></button><br><br>
-				Really Grass Cutting Incremental - Extension 11b - v0.4.1 - Made by <a href="https://aarextiaokhiao.github.io/">TehAarex</a><br>
+				Really Grass Cutting Incremental - Extension 11c - v0.4.1 - Made by <a href="https://aarextiaokhiao.github.io/">TehAarex</a><br>
 				Inspired by <a href="https://www.roblox.com/games/9292879820">Grass Cutting Incremental</a>,
 				<a href="https://mrredshark77.github.io/Really-Grass-Cutting-Incremental/">Original by MrRedShark77</a><br>
 				<b class="red">Warning! Recommended size is 1920x1080! You may change zoom!</b><br><br>
@@ -124,19 +124,22 @@
 
 				Hint: Use arrow keys / WASD keys to move through the map. Hold shift to upgrade instantly.
             </div><div id="map_div_stats">
-				<span id="time"></span><br>
+				<span id="time"></span><br><br>
 				<h1>Reset Layers</h1>
 				<button id="allStatsBtn" onclick="toggleOption('allStats')">Show: <span id="allStats">OFF</span></button>
                 <div id="stats">
-					<span id="pTimes"></span><br>
-					<span id="cTimes"></span><br>
-					<span id="sTimes"></span><br>
+					<h2 id="statsHeader">Normal Realm<br></h2>
+					<span id="pTimes"></span>
+					<span id="cTimes"></span>
+					<span id="sTimes"></span>
 				</div><div id="aStats">
-					<span id="aTimes"></span><br>
-					<span id="lTimes"></span><br>
-					<span id="fTimes"></span><br>
+					<h2 id="aStatsHeader">Anti-Realm<br></h2>
+					<span id="aTimes"></span>
+					<span id="lTimes"></span>
+					<span id="fTimes"></span>
 				</div><div id="gStats">
-					<span id="gTimes"></span><br>
+					<h2 id="gStatsHeader">Space<br></h2>
+					<span id="gTimes"></span>
 				</div>
             </div><div id="map_div_p">
                 <div style="width: 100%; height: 50%;">

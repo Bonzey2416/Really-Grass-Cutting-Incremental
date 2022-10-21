@@ -793,6 +793,7 @@ function updateStarChart() {
         `
 
         if (tu.effDesc) h += '<br>Effect: <span class="cyan">'+tu.effDesc(tt.eff[i])+"</span>"
+        h += '<br><br>'
 
         let canBuy = Decimal.gte(star, tt.cost[i])
         let hasBuy25 = (Math.floor(amt / 25) + 1) * 25 < tt.max[i]
@@ -801,11 +802,11 @@ function updateStarChart() {
         if (amt < tt.max[i]) {
             let cost2 = tu.costOnce?Decimal.mul(tt.cost[i],25-amt%25):tu.cost((Math.floor(amt/25)+1)*25-1)
             let cost3 = tu.costOnce?Decimal.mul(tt.cost[i],tt.max[i]-amt):tu.cost(tt.max[i]-1)
-            if (hasBuy25) h += `<br><span class="${Decimal.gte(star,cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} Stars</span>`
-            else if (hasMax) h += `<br><span class="${Decimal.gte(star,cost3)?"green":"red"}">Cost to max: ${format(cost2,0)} Stars</span>`
+            if (hasBuy25) h += `<span class="${Decimal.gte(star,cost2)?"green":"red"}">Cost to next 25: ${format(cost2,0)} Stars</span><br>`
+            else if (hasMax) h += `<span class="${Decimal.gte(star,cost3)?"green":"red"}">Cost to max: ${format(cost2,0)} Stars</span><br>`
 
-            h += `<br><span class="${Decimal.gte(star,tt.cost[i])?"green":"red"}">Cost: ${format(tt.cost[i],0)} Stars</span>`
-        } else h += "<br><b class='pink'>Maxed!</b>"
+            h += `<span class="${Decimal.gte(star,tt.cost[i])?"green":"red"}">Cost: ${format(tt.cost[i],0)} Stars</span>`
+        } else h += "<b class='pink'>Maxed!</b>"
 
         tmp.el.sc_desc.setHTML(h)
 
