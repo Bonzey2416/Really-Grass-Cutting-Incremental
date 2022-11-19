@@ -11,6 +11,7 @@ MAIN.gal = {
         if (player.lowGH <= 12) x = x.mul(getAGHEffect(4))
 
         x = x.mul(upgEffect('sfrgt',2))
+        x = x.mul(upgEffect('rocket',10))
 
         return x.floor()
     },
@@ -55,8 +56,8 @@ RESET.gal = {
         resetUpgrades('factory')
         resetUpgrades('foundry')
         resetUpgrades('gen')
-        resetUpgrades('assembler')
-        resetUpgrades('momentum')
+        if (!hasUpgrade('funnyMachine',3)) resetUpgrades('assembler')
+        
         if (!hasStarTree('auto',0)) resetUpgrades('auto')
         resetUpgrades('plat')
 
@@ -64,7 +65,12 @@ RESET.gal = {
         player.rocket.total_fp = 0
         player.rocket.amount = 0
         player.rocket.part = 0
-        player.momentum = 0
+
+        if (player.lowGH > -20) {
+            resetUpgrades('momentum')
+            player.momentum = 0
+        }
+
         player.oil = E(0)
         player.bestOil = E(0)
         player.ap = E(0)
@@ -83,7 +89,7 @@ RESET.gal = {
         player.bestCharge = E(0)
         player.grasshop = 0
         player.grassskip = 0
-        player.plat = 0
+        if (player.lowGH > -12) player.plat = 0
 
         if (player.lowGH > 28) player.chal.comp = []
 
@@ -91,7 +97,7 @@ RESET.gal = {
         resetUpgrades('oil')
         resetUpgrades('aGrass')
 
-        player.sTime = 0
+        if (player.lowGH > -16) player.sTime = 0
 
         RESET.gh.doReset(order)
     },
@@ -126,7 +132,7 @@ function getASEff(id,def=1) { return tmp.astral_eff[id]||def }
 UPGS.moonstone = {
     title: "Moonstone Upgrades",
 
-    underDesc: _=>`You have ${format(player.moonstone,0)} Moonstone (${formatPercent(0.005)} platinum grow chance)`,
+    underDesc: _=>`You have ${format(player.moonstone,0)} Moonstone (${formatPercent(tmp.moonstoneChance)} platinum grow chance)`,
 
     ctn: [
         {
@@ -229,6 +235,50 @@ UPGS.moonstone = {
                 return x
             },
             effDesc: x => format(x)+"x",
+        },{
+            max: 100,
+
+            unl: _=>hasUpgrade('funnyMachine',1),
+
+            costOnce: true,
+
+            title: "Moon SFRGT",
+            desc: `Increase SFRGT gain by <b class="green">+50%</b> per level.`,
+
+            res: "moonstone",
+            icon: ['Curr/SuperFun'],
+            
+            cost: i => 250,
+            bulk: i => Math.floor(i/250),
+
+            effect(i) {
+                let x = i/2+1
+
+                return x
+            },
+            effDesc: x => format(x)+"x",
+        },{
+            max: 10,
+
+            unl: _=>player.lowGH<=-20,
+
+            costOnce: true,
+
+            title: "Moon-Exponential XP",
+            desc: `Increase XP multiplier's exponent by <b class="green">+1%</b> per level.`,
+
+            res: "moonstone",
+            icon: ['Icons/XP','Icons/Exponent'],
+            
+            cost: i => 2500,
+            bulk: i => Math.floor(i/2500),
+
+            effect(i) {
+                let x = i*0.01+1
+
+                return x
+            },
+            effDesc: x => "^"+format(x),
         },
     ],
 }

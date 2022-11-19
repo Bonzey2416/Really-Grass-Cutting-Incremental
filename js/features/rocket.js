@@ -13,10 +13,12 @@ const ROCKET = {
 
             player.rocket.amount += b-rf
 
-            let c = Decimal.pow(tmp.rf_base, b).sub(Decimal.pow(tmp.rf_base, rf)).div(tmp.rf_base-1).mul(tmp.rf_base_mult)
+            if (!hasStarTree('auto',10)) {
+                let c = Decimal.pow(tmp.rf_base, b).sub(Decimal.pow(tmp.rf_base, rf)).div(tmp.rf_base-1).mul(tmp.rf_base_mult)
 
-            player.chargeRate = player.chargeRate.sub(Decimal.mul(c,1e36)).max(0)
-            player.oil = player.oil.sub(Decimal.mul(c,1e9)).max(0)
+                player.chargeRate = player.chargeRate.sub(Decimal.mul(c,1e36)).max(0)
+                player.oil = player.oil.sub(Decimal.mul(c,1e9)).max(0)
+            }
 
             updateRocketTemp()
         }
@@ -233,6 +235,28 @@ UPGS.rocket = {
                 return x
             },
             effDesc: x => format(x)+"x",
+        },{
+            max: 10000,
+
+            unl: _=> player.lowGH<=0,
+
+            costOnce: true,
+
+            title: "Rocket Fueled Celestal",
+            desc: `Increase star gain by <b class="green">+2.5%</b> per level.`,
+
+            res: "rf",
+            icon: ['Curr/Star'],
+            
+            cost: i => 100,
+            bulk: i => Math.floor(i/100),
+
+            effect(i) {
+                let x = E(i*0.025+1)
+
+                return x
+            },
+            effDesc: x => format(x)+"x",
         },
     ],
 }
@@ -295,6 +319,9 @@ UPGS.momentum = {
     unl: _=>player.rocket.part>0,
 
     underDesc: _=>`You have ${format(player.momentum,0)} Momentum`,
+
+    autoUnl: _=>hasStarTree('auto',11),
+    noSpend: _=>hasStarTree('auto',11),
 
     ctn: [
         {
@@ -477,6 +504,66 @@ UPGS.momentum = {
                 return x
             },
             effDesc: x => format(x)+"x",
+        },{
+            max: 1000,
+
+            unl: _=>player.lowGH<=-20,
+
+            title: "Great Grass",
+            desc: `Increase grass gain by 100% every level.`,
+
+            res: "momentum",
+            icon: ['Curr/Grass'],
+            
+            cost: i => Math.ceil(1.1**i*10),
+            bulk: i => Math.floor(Math.logBase(Math.max(1,i/10),1.1))+1,
+
+            effect(i) {
+                let x = Decimal.pow(2,i)
+
+                return x
+            },
+            effDesc: x => format(x)+"x",
+        },{
+            max: 1000,
+
+            unl: _=>player.lowGH<=-20,
+
+            title: "Great Level",
+            desc: `Increase XP gain by 100% every level.`,
+
+            res: "momentum",
+            icon: ['Icons/XP'],
+            
+            cost: i => Math.ceil(1.1**i*10),
+            bulk: i => Math.floor(Math.logBase(Math.max(1,i/10),1.1))+1,
+
+            effect(i) {
+                let x = Decimal.pow(2,i)
+
+                return x
+            },
+            effDesc: x => format(x)+"x",
+        },{
+            max: 1000,
+
+            unl: _=>player.lowGH<=-20,
+
+            title: "Giga Charge",
+            desc: `Increase charge rate by 50% every level.`,
+
+            res: "momentum",
+            icon: ['Icons/Charge'],
+            
+            cost: i => Math.ceil(1.25**i*25),
+            bulk: i => Math.floor(Math.logBase(Math.max(1,i/25),1.25))+1,
+
+            effect(i) {
+                let x = Decimal.pow(1.5,i)
+
+                return x
+            },
+            effDesc: x => format(x)+"x",
         },
     ],
 }
@@ -502,7 +589,7 @@ el.update.rocket = _=>{
 }
 
 function updateRocketTemp() {
-    let cheap = 1 * starTreeEff('progress',9,1)
+    let cheap = 1 * starTreeEff('progress',9,1) * starTreeEff('progress',11,1)
     
     let rf = player.rocket.total_fp
     tmp.rf_base = RF_COST_POW ** (1/cheap)
@@ -515,8 +602,11 @@ function updateRocketTemp() {
 }
 
 tmp_update.push(_=>{
-    tmp.rp_req = [Decimal.pow(4+player.rocket.part/2,player.rocket.part).mul(1e60),player.rocket.part>9&&player.gTimes==0?1/0:15*player.rocket.part+15]
-    tmp.rf_base_mult = Decimal.pow(1.5,player.rocket.part)
+    let rp = player.rocket.part
+    if (rp > 50) rp = (rp/50)**2.5*50
+
+    tmp.rp_req = [Decimal.pow(4+rp/2,rp).mul(1e60),player.rocket.part>9&&player.gTimes==0?1/0:Math.ceil(15*rp)+15]
+    tmp.rf_base_mult = Decimal.pow(1.5,rp)
 
     updateRocketTemp()
 })

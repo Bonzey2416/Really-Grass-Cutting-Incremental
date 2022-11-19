@@ -21,6 +21,7 @@ function resetTemp() {
         platGain: 1,
 
         moonstoneGain: 1,
+        moonstoneChance: 0.005,
 
         grasses: [],
         level: {},

@@ -35,7 +35,7 @@ const MAP = {
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
 		[null,null,null,'opt','stats',null,null],
-		[null,null,null,'sc','at',null,null],
+		[null,null,'sac','sc','at',null,null],
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
@@ -54,6 +54,7 @@ const MAP_UNLS = {
 	fd: _ => hasUpgrade('factory', 0),
 	as: _ => hasUpgrade('factory', 3),
 	rp: _ => hasUpgrade('factory', 6),
+	sac: _ => player.lowGH <= -24,
 	sc: _ => true,
 	at: _ => true,
 }
@@ -136,7 +137,8 @@ const MAP_COLORS = {
 	as: "gh",
 	rp: "gh",
 	sc: "gal",
-	at: "gal"
+	at: "gal",
+	sac: "gal"
 }
 
 el.update.map_ext = _ => {
@@ -180,6 +182,7 @@ const MAP_LOCS = {
 	rp: "Factory",
 	sc: "Space",
 	at: "Space",
+	sac: "Space",
 }
 
 let locTimeout
@@ -210,6 +213,7 @@ const GO_TO_NAMES = {
 	rp: "Rocket",
 	sc: "Star Chart",
 	at: "Galactic",
+	sac: "Sacrifice",
 }
 
 let go_to = false
@@ -258,6 +262,7 @@ const MAP_NOTIFY = {
 		hasUpgrade("factory", 3) ? 1 :
 		0,
 	rp: _ => hasUpgrade("factory", 6) ? 1 : 0,
+	sac: _ => player.stars.gte(1e18) ? 1 : 0,
 }
 
 tmp_update.push(_=>{

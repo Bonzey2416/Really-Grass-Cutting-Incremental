@@ -17,6 +17,8 @@ MAIN.steel = {
 
         x = x.mul(getASEff('steel'))
 
+        if (player.grassskip >= 25) x = x.mul(getGSEffect(6,1))
+
         return x.floor()
     },
     foundryEff() {
@@ -37,12 +39,12 @@ MAIN.steel = {
             x = x.mul(upgEffect('aGrass',0))
             x = x.mul(upgEffect('ap',1))
 
-            x = x.mul(upgEffect('rocket',6))
+            x = x.mul(upgEffect('rocket',6)).mul(upgEffect('momentum',12))
             x = x.mul(upgEffect('momentum',7))
 
-            x = x.mul(starTreeEff('speed',1)*starTreeEff('speed',2)*starTreeEff('speed',9))
+            x = x.mul(starTreeEff('speed',1)*starTreeEff('speed',2)*starTreeEff('speed',9)*starTreeEff('speed',14))
 
-            x = x.mul(upgEffect('funnyMachine',0))
+            x = x.mul(upgEffect('funnyMachine',0)).mul(upgEffect('funnyMachine',2)).mul(upgEffect('funnyMachine',3))
 
             if (player.decel) x = x.div(1e24)
 
@@ -50,11 +52,11 @@ MAIN.steel = {
         },
         effs: [
             {
-                req: E(0),
+                req: E(1),
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(6)
 
@@ -66,7 +68,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(3)
 
@@ -78,7 +80,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.log10().div(10).add(1).root(2)
                     if (!hasUpgrade('assembler',5)) x = x.softcap(1.25,1/2,0)
@@ -91,7 +93,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(2)
 
@@ -103,7 +105,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(2)
 
@@ -115,7 +117,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return 0
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.log10()
 
@@ -127,7 +129,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(3)
 
@@ -139,7 +141,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(3)
 
@@ -152,7 +154,7 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(4)
 
@@ -165,13 +167,39 @@ MAIN.steel = {
                 eff(c) {
                     if (player.bestCharge.lt(this.req)) return E(1)
 
-                    let s = c.div(this.req.div(tmp.chargeOoMMul).max(1)).max(1)
+                    let s = calcChargeAmountFromOoM(c,this.req).max(1)
 
                     let x = s.root(4)
 
                     return x.toNumber()
                 },
                 effDesc: x => "Boost Oil gain by "+format(x)+"x",
+            },{
+                unl: _=>hasUpgrade('funnyMachine',2),
+                req: E(1e30),
+                eff(c) {
+                    if (player.bestCharge.lt(this.req)) return E(1)
+
+                    let s = c.div(this.req).max(1)
+
+                    let x = s.root(4)
+
+                    return x.toNumber()
+                },
+                effDesc: x => "Boost Fun gain by "+format(x)+"x",
+            },{
+                unl: _=>hasUpgrade('funnyMachine',2),
+                req: E(1e33),
+                eff(c) {
+                    if (player.bestCharge.lt(this.req) || !player.decel) return E(1)
+
+                    let s = c.div(this.req).max(1)
+
+                    let x = s.root(4)
+
+                    return x.toNumber()
+                },
+                effDesc: x => "Boost SFRGT gain by "+format(x)+"x",
             },
         ],
     },
@@ -204,7 +232,7 @@ RESET.steel = {
     },
 
     doReset(order="steel") {
-        player.sTime = 0
+        if (player.lowGH > -8) player.sTime = 0
         player.chargeRate = E(0)
 
         RESET.gh.reset(true)
@@ -595,6 +623,72 @@ UPGS.assembler = {
                         
             cost: i => E(1e53),
             bulk: i => 1,
+        },{
+            unl: _=>hasUpgrade('funnyMachine',3),
+
+            title: "Limitless Anti-Grass Upgrades",
+            desc: `<b class="green">Anti-Grass Steel, Anti-Grass Value & Anti-Grass XP</b> will no longer have maximum limit.`,
+        
+            res: "steel",
+            icon: ["Curr/AntiGrass","Icons/Automation2"],
+                        
+            cost: i => E(1e220),
+            bulk: i => 1,
+        },{
+            unl: _=>hasUpgrade('funnyMachine',3),
+
+            title: "Limitless Anonymity Upgrades",
+            desc: `<b class="green">AP Value, AP Charge, AP XP & AP TP</b> will no longer have maximum limit.`,
+        
+            res: "steel",
+            icon: ["Curr/Anonymity","Icons/Automation2"],
+                        
+            cost: i => E(1e235),
+            bulk: i => 1,
+        },{
+            unl: _=>hasUpgrade('funnyMachine',3),
+
+            title: "Beyond Charge OoM Reduction",
+            desc: `Make charge OoM reductions (softcapped) instead of (hardcapped). (charge OoM reductions can go below 0, but negative charge OoMs are softcapped).`,
+        
+            res: "steel",
+            icon: ["Curr/Charge","Icons/Infinite"],
+                        
+            cost: i => E(1e275),
+            bulk: i => 1,
+        },{
+            unl: _=>hasUpgrade('funnyMachine',3),
+
+            title: "Limitless Anti-Grass Upgrades II",
+            desc: `<b class="green">Anti-Grass Charge & Scaled Level</b> will no longer have maximum limit.<br>Remind: <b class="green">Anti-Grass Charge</b>'s effect softcaps at <b class="green">1 Bx</b>.`,
+        
+            res: "steel",
+            icon: ["Curr/AntiGrass","Icons/Automation2"],
+                        
+            cost: i => E('e330'),
+            bulk: i => 1,
+        },{
+            unl: _=>hasUpgrade('funnyMachine',3),
+
+            title: "Limitless Anonymity Upgrades II",
+            desc: `<b class="green">Scaled Level II</b> will no longer have maximum limit.`,
+        
+            res: "steel",
+            icon: ["Curr/Anonymity","Icons/Automation2"],
+                        
+            cost: i => E('e385'),
+            bulk: i => 1,
+        },{
+            unl: _=>hasUpgrade('funnyMachine',3),
+
+            title: "Limitless Oil Upgrades",
+            desc: `Oil upgrades will no longer have maximum limit.<br>Remind: <b class="green">Oily Platinum</b>'s effect softcaps at <b class="green">100x</b>.`,
+        
+            res: "steel",
+            icon: ["Curr/Oil","Icons/Automation2"],
+                        
+            cost: i => E('e435'),
+            bulk: i => 1,
         },
     ],
 }
@@ -608,13 +702,14 @@ tmp_update.push(_=>{
 
     tmp.chargeGain = ms.charger.gain()
 
+    tmp.beyondOoM = hasUpgrade('assembler',8)
+
     tmp.chargeOoM = 0
     if (player.grasshop >= 18) tmp.chargeOoM++
     if (player.grasshop >= 20) tmp.chargeOoM++
     if (player.grasshop >= 24) tmp.chargeOoM += getGHEffect(12,0)
+    if (player.lowGH <= -4) tmp.chargeOoM += getAGHEffect(8,0)
     tmp.chargeOoM += upgEffect('sfrgt',3,0)
-
-    tmp.chargeOoMMul = Decimal.pow(10,tmp.chargeOoM)
 
     for (let x = 0; x < ms.charger.effs.length; x++) {
         let ce = ms.charger.effs[x]
@@ -622,6 +717,23 @@ tmp_update.push(_=>{
         tmp.chargeEff[x] = ce.eff(unl?player.chargeRate:E(0))
     }
 })
+
+function calcChargeAmountFromOoM(charge, req, oom=tmp.chargeOoM) {
+    let r
+
+    if (tmp.beyondOoM) {
+        let rl = Number(req.log10().round())
+        if (oom >= rl) oom = (oom-rl+1)**0.6+rl-1
+
+        r = req.div(Decimal.pow(10,oom))
+    } else {
+        r = req.div(Decimal.pow(10,oom)).max(1)
+    }
+
+    let x = charge.div(r).max(1)
+
+    return x
+}
 
 el.setup.factory = _=>{
     let table = new Element(charge_mil)
