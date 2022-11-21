@@ -262,7 +262,7 @@ const MAP_NOTIFY = {
 		hasUpgrade("factory", 3) ? 1 :
 		0,
 	rp: _ => hasUpgrade("factory", 6) ? 1 : 0,
-	sac: _ => player.stars.gte(1e18) ? 1 : 0,
+	sac: _ => player.stars.gte(1e18) || player.sacTimes ? 1 : 0,
 }
 
 tmp_update.push(_=>{

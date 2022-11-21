@@ -16,6 +16,7 @@ const UPG_RES = {
     fun: ["Fun",_=>[player,"fun"],'FunBase'],
     star: ["Star",_=>[player,"stars"],'SpaceBase'],
     SFRGT: ["SFRGT",_=>[player,"SFRGT"],'FunBase'],
+    dm: ["Dark Matter",_=>[player,"dm"],'DarkMatterBase'],
 }
 
 const isResNumber = ['perk','plat','rf','momentum','moonstone']
@@ -1209,6 +1210,9 @@ el.update.upgs = _=>{
 	if (mapID == 'at') {
 		updateUpgradesHTML('moonstone')
 	}
+	if (mapID == 'sac') {
+		updateUpgradesHTML('dm')
+	}
 
 	if (mapID == 'opt') {
 		tmp.el.scientific.setTxt(player.options.scientific?"ON":"OFF")
@@ -1243,6 +1247,7 @@ el.update.upgs = _=>{
 		if (gStats || player.options.allStats) {
 			tmp.el.gStatsHeader.setDisplay(player.options.allStats && player.gTimes)
 			tmp.el.gTimes.setHTML(player.gTimes ? "You have done " + player.gTimes + " <b style='color: #505'>Galactic</b> resets.<br>Time: " + formatTime(player.gTime) + "<br>" : "")
+			tmp.el.sacTimes.setHTML(player.sacTimes ? "You have done " + player.sacTimes + " <b style='color: #305'>Sacrifice</b> resets.<br>Time: " + formatTime(player.sacTime) + "<br>" : "")
 		}
 
 		tmp.el.allStatsBtn.setDisplay(hasUpgrade('factory', 4) || player.gTimes > 0)

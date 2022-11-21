@@ -43,7 +43,7 @@ RESET.decel = {
 el.update.decel = _=>{
     tmp.el.grass_div.changeStyle("background-color", player.decel ? "#242697" : "")
     tmp.el.grass.changeStyle("background-color", player.decel ? "#002D9F" : "")
-    tmp.el.fog.setDisplay(player.decel)
+    tmp.el.fog.setDisplay(player.decel && !inSpace())
     if (mapID == "as") tmp.el.reset_btn_decel.setTxt(player.decel?"Accelerate":"Decelerate")
 }
 

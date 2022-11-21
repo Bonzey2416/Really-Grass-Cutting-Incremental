@@ -145,6 +145,19 @@ MAIN.gs = {
         },{
             r: 10,
             desc: `Unlock Funify reset and The Funny Upgrade rocket fuel upgrade.`,
+        },{
+            r: 15,
+            desc: `SFRGT is increased by <b class="green">50%</b> every grass-skip.`,
+            effect: _=>Decimal.pow(1.5,player.grassskip),
+            effDesc: x=> format(x)+"x",
+        },{
+            r: 21,
+            desc: `<b class="green">Double</b> moonstone earned and its chance.`,
+        },{
+            r: 25,
+            desc: `Steel is increased by <b class="green">50%</b> every grass-skip.`,
+            effect: _=>Decimal.pow(1.5,player.grassskip),
+            effDesc: x=> format(x)+"x",
         },
     ],
 }

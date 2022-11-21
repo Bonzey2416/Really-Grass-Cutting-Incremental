@@ -102,6 +102,10 @@ function getPlayerData() {
 		fun: E(0),
 		SFRGT: E(0),
 
+        sacTime: 0,
+        sacTimes: 0,
+        dm: E(0),
+
 		time: 0,
 		map_notify: {},
 		version: VER,
@@ -125,8 +129,8 @@ function safecheckSave(data) {
 	return true
 }
 
-const VER = 0.0413
-const EX_COMMIT = 11.04
+const VER = 0.042
+const EX_COMMIT = 11.05
 function loadPlayer(data) {
 	player = deepUndefinedAndDecimal(data, getPlayerData())
 	convertStringToDecimal()

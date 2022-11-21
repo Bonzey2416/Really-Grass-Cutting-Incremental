@@ -4,7 +4,7 @@ MAIN.gal = {
 
         if (player.grassskip>0) x += getGSEffect(0,0)
 
-        x = Decimal.pow(1.5,Math.max(player.rocket.part-10,0)).mul(x)
+        x = Decimal.pow(1.5+upgEffect('dm',5,0),Math.max(player.rocket.part-10,0)).mul(x)
 
         x = x.mul(upgEffect('moonstone',4))
 
@@ -12,6 +12,8 @@ MAIN.gal = {
 
         x = x.mul(upgEffect('sfrgt',2))
         x = x.mul(upgEffect('rocket',10))
+
+        x = x.mul(upgEffect('dm',4))
 
         return x.floor()
     },
@@ -89,7 +91,7 @@ RESET.gal = {
         player.bestCharge = E(0)
         player.grasshop = 0
         player.grassskip = 0
-        if (player.lowGH > -12) player.plat = 0
+        if (player.lowGH > -12 || order=='sac') player.plat = 0
 
         if (player.lowGH > 28) player.chal.comp = []
 

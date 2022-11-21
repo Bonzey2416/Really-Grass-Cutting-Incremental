@@ -11,6 +11,7 @@ function calc(dt) {
     player.lTime += dt
     player.fTime += dt
     player.gTime += dt
+    player.sacTime += dt
 
     if (tmp.spawn_time >= tmp.grassSpawn) {
         while (tmp.spawn_time >= tmp.grassSpawn) {
