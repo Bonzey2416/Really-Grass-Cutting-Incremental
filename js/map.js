@@ -25,7 +25,7 @@ const MAP = {
 	earth: [
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
-		[null,null,null,'opt','stats','rp',null],
+		[null,null,'stats','opt','time','rp',null],
 		[null,null,'auto','g','pc','gh','fd'],
 		[null,null,null,'p','chal','as',null],
 		[null,null,null,null,null,null,null],
@@ -34,7 +34,7 @@ const MAP = {
 	space: [
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
-		[null,null,null,'opt','stats',null,null],
+		[null,null,'stats','opt','time',null,null],
 		[null,null,'sac','sc','at',null,null],
 		[null,null,null,null,null,null,null],
 		[null,null,null,null,null,null,null],
@@ -48,7 +48,8 @@ const MAP_UNLS = {
 	auto: _ => true,
 	p: _ => true,
 	pc: _ => true,
-	stats: _ => player.pTimes > 0,
+	stats: _ => true,
+	time: _ => player.pTimes > 0,
 	chal: _ => player.cTimes > 0,
 	gh: _ => player.cTimes > 0,
 	fd: _ => hasUpgrade('factory', 0),
@@ -126,6 +127,7 @@ function updateMapButton(el, mx, my, dim) {
 const MAP_COLORS = {
 	opt: "misc",
 	stats: "misc",
+	time: "misc",
 
 	g: "grass",
 	p: "grass",
@@ -170,6 +172,7 @@ el.update.map_ext = _ => {
 const MAP_LOCS = {
 	opt: "Misc",
 	stats: "Misc",
+	time: "Misc",
 
 	g: "Field",
 	auto: "Upgrades",
@@ -201,6 +204,7 @@ function showLoc(x) {
 const GO_TO_NAMES = {
 	opt: "Options",
 	stats: "Stats",
+	time: "Time Stats",
 
 	g: "Field",
 	auto: "Automation",

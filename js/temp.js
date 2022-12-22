@@ -6,6 +6,9 @@ function resetTemp() {
     tmp = {
 	    el: tmp.el,
         map_notify: {},
+        outsideNormal: false,
+
+        stats_tab: 'grass',
 
         sc_tab: 'auto',
         sc_choosed: [null,null],
@@ -16,6 +19,8 @@ function resetTemp() {
         autocutTime: 0,
         autocutAmt: 1,
         spawnAmt: 1,
+
+        compact: 1,
 
         platChance: 0.005,
         platGain: 1,

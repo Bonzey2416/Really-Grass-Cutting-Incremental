@@ -17,13 +17,15 @@ const UPG_RES = {
     star: ["Star",_=>[player,"stars"],'SpaceBase'],
     SFRGT: ["SFRGT",_=>[player,"SFRGT"],'FunBase'],
     dm: ["Dark Matter",_=>[player,"dm"],'DarkMatterBase'],
+    unGrass: ["Un-Grass",_=>[player,"unGrass"],'UnnaturalBase'],
+    np: ["NP",_=>[player,"np"],'NormalityBase'],
 }
 
 const isResNumber = ['perk','plat','rf','momentum','moonstone']
 
 const UPGS = {
     grass: {
-        unl: _=> !player.decel,
+        unl: _=> !tmp.outsideNormal,
 
         cannotBuy: _=>inChal(1) || inChal(7),
 
@@ -1174,6 +1176,7 @@ el.update.upgs = _=>{
 	if (mapID == 'g') {
 		updateUpgradesHTML('grass')
 		updateUpgradesHTML('aGrass')
+		updateUpgradesHTML('unGrass')
 	}
 	if (mapID == 'p') {
 		updateUpgradesHTML('perk')
@@ -1188,6 +1191,8 @@ el.update.upgs = _=>{
 
 		updateUpgradesHTML('ap')
 		updateUpgradesHTML('oil')
+
+		updateUpgradesHTML('np')
 	}
 	if (mapID == 'gh') {
         updateUpgradesHTML('factory')
@@ -1221,16 +1226,16 @@ el.update.upgs = _=>{
 		tmp.el.hideMilestoneBtn.setDisplay(player.grasshop > 0 || player.sTimes > 0)
 		tmp.el.hideMilestone.setTxt(player.options.hideMilestone?"At last obtained":"All")
 	}
-	if (mapID == 'stats') {
+	if (mapID == 'time') {
 		tmp.el.time.setHTML("Time: " + formatTime(player.time))
 
-		let stats = !player.decel && !inSpace()
+		let stats = !tmp.outsideNormal && !inSpace()
 		tmp.el.stats.setDisplay(stats || player.options.allStats)
 		if (stats || player.options.allStats) {
 			tmp.el.statsHeader.setDisplay(player.options.allStats)
-			tmp.el.pTimes.setHTML(player.pTimes ? "You have done " + player.pTimes + " <b style='color: #5BFAFF'>Prestige</b> resets." + (player.decel ? "" : "<br>Time: " + formatTime(player.pTime)) + "<br>" : "")
-			tmp.el.cTimes.setHTML(player.cTimes ? "You have done " + player.cTimes + " <b style='color: #FF84F6'>Crystalize</b> resets." + (player.decel ? "" : "<br>Time: " + formatTime(player.cTime)) + "<br>" : "")
-			tmp.el.sTimes.setHTML(player.sTimes ? "You have done " + player.sTimes + " <b style='color: #c5c5c5'>Steelie</b> resets." + (player.decel ? "" : "<br>Time: " + formatTime(player.sTime)) + "<br>" : "")
+			tmp.el.pTimes.setHTML(player.pTimes ? "You have done " + player.pTimes + " <b style='color: #5BFAFF'>Prestige</b> resets." + (tmp.outsideNormal ? "" : "<br>Time: " + formatTime(player.pTime)) + "<br>" : "")
+			tmp.el.cTimes.setHTML(player.cTimes ? "You have done " + player.cTimes + " <b style='color: #FF84F6'>Crystalize</b> resets." + (tmp.outsideNormal ? "" : "<br>Time: " + formatTime(player.cTime)) + "<br>" : "")
+			tmp.el.sTimes.setHTML(player.sTimes ? "You have done " + player.sTimes + " <b style='color: #c5c5c5'>Steelie</b> resets." + (tmp.outsideNormal ? "" : "<br>Time: " + formatTime(player.sTime)) + "<br>" : "")
 		}
 
 		let aStats = player.decel && !inSpace()
@@ -1242,10 +1247,19 @@ el.update.upgs = _=>{
 			tmp.el.fTimes.setHTML(player.fTimes ? "You have done " + player.fTimes + " <b style='color: #ffff79'>Funify</b> resets." + (!player.decel ? "" : "<br>Time: " + formatTime(player.fTime)) + "<br>" : "")
 		}
 
+		let uStats = player.recel && !inSpace()
+		let uStatsUnl = hasUpgrade("funnyMachine", 4) && uStats
+		tmp.el.uStats.setDisplay(uStatsUnl)
+		if (uStatsUnl) {
+			tmp.el.uStatsHeader.setDisplay(player.options.allStats)
+			tmp.el.nTimes.setHTML(player.nTimes ? "You have done " + player.nTimes + " <b style='color: #8fcc00'>Normality</b> resets." + (!player.recel ? "" : "<br>Time: " + formatTime(player.nTime)) + "<br>" : "")
+		}
+
 		let gStats = inSpace()
-		tmp.el.gStats.setDisplay(gStats || player.options.allStats)
-		if (gStats || player.options.allStats) {
-			tmp.el.gStatsHeader.setDisplay(player.options.allStats && player.gTimes)
+		let gStatsUnl = player.gTimes && gStats
+		tmp.el.gStats.setDisplay(gStatsUnl)
+		if (gStatsUnl) {
+			tmp.el.gStatsHeader.setDisplay(player.options.allStats)
 			tmp.el.gTimes.setHTML(player.gTimes ? "You have done " + player.gTimes + " <b style='color: #505'>Galactic</b> resets.<br>Time: " + formatTime(player.gTime) + "<br>" : "")
 			tmp.el.sacTimes.setHTML(player.sacTimes ? "You have done " + player.sacTimes + " <b style='color: #305'>Sacrifice</b> resets.<br>Time: " + formatTime(player.sacTime) + "<br>" : "")
 		}

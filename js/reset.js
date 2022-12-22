@@ -15,6 +15,7 @@ el.setup.reset = _=>{
                     <div id="reset_gain_${x}"></div>
                     ${r.btns ?? ''}
                     <button id="reset_btn_${x}" onclick="RESET.${x}.reset()">${(r.hotkey ? `(${r.hotkey}) ` : ``) + r.resetBtn}</button>
+                    ${x=='gh'||x=='gs'?`<button id="reset_auto_${x}">Auto: OFF</button>`:""}
                 </div>
             </div>
             <div id="reset_req_div_${x}" class="reset_req ${x}"><div id="reset_req_desc_${x}"></div></div>
@@ -23,6 +24,14 @@ el.setup.reset = _=>{
             resetTable.setHTML(html)
             resetTable.addClass(x)
         }
+    }
+
+    document.getElementById('reset_auto_gh').onclick = _=>{
+        player.autoGH = !player.autoGH
+    }
+
+    document.getElementById('reset_auto_gs').onclick = _=>{
+        player.autoGS = !player.autoGS
     }
 }
 
@@ -52,6 +61,8 @@ el.update.reset = _=> {
 
         updateResetHTML('ap')
         updateResetHTML('oil')
+
+        updateResetHTML('np')
     }
     if (mapID == 'gh') {
         updateResetHTML('gh')
@@ -65,6 +76,7 @@ el.update.reset = _=> {
     if (mapID == 'rp') {
         updateResetHTML('rocket_part')
         updateResetHTML('gal')
+        updateResetHTML('recel')
     }
     if (mapID == 'sac') {
         updateResetHTML('sac')

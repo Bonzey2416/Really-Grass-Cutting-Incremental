@@ -106,6 +106,21 @@ function getPlayerData() {
         sacTimes: 0,
         dm: E(0),
 
+        recel: false,
+        unGrass: E(0),
+        unBestGrass: E(0),
+        unRes: {
+            level: 0,
+            xp: E(0),
+            tier: 0,
+            tp: E(0),
+        },
+
+        np: E(0),
+        bestNP: E(0),
+        bestNP2: E(0),
+        nTimes: 0,
+
 		time: 0,
 		map_notify: {},
 		version: VER,
@@ -129,8 +144,8 @@ function safecheckSave(data) {
 	return true
 }
 
-const VER = 0.042
-const EX_COMMIT = 11.05
+const VER = 0.0421
+const EX_COMMIT = 11.06
 function loadPlayer(data) {
 	player = deepUndefinedAndDecimal(data, getPlayerData())
 	convertStringToDecimal()

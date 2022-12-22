@@ -63,7 +63,7 @@ const GH_MIL_LEN = MAIN.gh.milestone.length
 function getGHEffect(x,def=1) { return tmp.ghEffect[x]||def }
 
 RESET.gh = {
-    unl: _=>player.cTimes>0 && !player.decel,
+    unl: _=>player.cTimes>0 && !tmp.outsideNormal,
     req: _=>player.level>=300,
     reqDesc: _=>`Reach Level 300.`,
 
@@ -265,6 +265,11 @@ MAIN.agh_milestone = [
     },{
         r: -24,
         desc: `Unlock the <b class="green">Dark Matter Plant</b> (on left of Star Chart).`,
+    },{
+        r: -28,
+        desc: `Increase momentum gain by <b class="green">+1</b> per 8 astral.`,
+        effect: _=>Math.floor(player.astral/8),
+        effDesc: x=> "+"+format(x,0),
     },
 ]
 
@@ -367,7 +372,13 @@ el.update.milestones = _=>{
         tmp.el.reset_btn_gh.setClasses({locked: player.level < tmp.gh_req})
         tmp.el.reset_btn_gs.setClasses({locked: player.level < tmp.gs_req})
 
-        let unl = player.cTimes>0 && !player.decel
+        tmp.el.reset_auto_gh.setTxt('Auto: '+(player.autoGH?"ON":"OFF"))
+        tmp.el.reset_auto_gs.setTxt('Auto: '+(player.autoGS?"ON":"OFF"))
+
+        tmp.el.reset_auto_gh.setDisplay(hasStarTree('auto',12))
+        tmp.el.reset_auto_gs.setDisplay(hasStarTree('auto',13))
+
+        let unl = player.cTimes>0 && !tmp.outsideNormal
 
         tmp.el.milestone_div_gh.setDisplay(unl)
 
