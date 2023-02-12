@@ -144,8 +144,8 @@ function safecheckSave(data) {
 	return true
 }
 
-const VER = 0.0421
-const EX_COMMIT = 11.06
+const VER = 0.0432
+const EX_COMMIT = 11.07
 function loadPlayer(data) {
 	player = deepUndefinedAndDecimal(data, getPlayerData())
 	convertStringToDecimal()

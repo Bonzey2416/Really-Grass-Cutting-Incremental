@@ -357,6 +357,8 @@ MAIN.np = {
 
         tmp.npGainBase = x
 
+        x = x.mul(upgEffect('dm',6))
+
         return x.floor()
     },
 }

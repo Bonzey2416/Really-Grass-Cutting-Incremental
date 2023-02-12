@@ -284,7 +284,7 @@ RESET.rocket_part = {
     title: `Rocket Part`,
     resetBtn: `Create Rocket Part`,
 
-    reset(force=false) {
+    reset(force=false, auto=false) {
         if ((player.steel.gte(tmp.rp_req[0]) && player.rocket.total_fp >= tmp.rp_req[1]) || force) {
             if (!force) {
                 player.rocket.part++
@@ -293,7 +293,10 @@ RESET.rocket_part = {
 
             updateTemp()
 
-            this.doReset()
+            if (auto) {
+                player.rocket.total_fp = 0
+            }
+            else this.doReset()
         }
     },
 
@@ -614,7 +617,7 @@ tmp_update.push(_=>{
     let m = 1
     if (player.lowGH <= -28) m += getAGHEffect(14)
 
-    m *= upgEffect('np',3)
+    m *= upgEffect('np',3) * upgEffect('dm',7)
 
     tmp.momentumGain = Math.ceil(m)
 })
