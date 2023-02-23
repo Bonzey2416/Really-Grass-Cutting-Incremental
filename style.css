@@ -21,7 +21,7 @@
 	text-align: center;
 }
 
-body {
+body, table, div {
 	font-family: Roboto, 'Helvetica Neue', sans-serif;
     color: white;
     background-color: #0052af;
