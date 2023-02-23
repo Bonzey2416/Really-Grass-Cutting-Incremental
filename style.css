@@ -21,7 +21,7 @@
 	text-align: center;
 }
 
-body, table, div {
+body {
 	font-family: Roboto, 'Helvetica Neue', sans-serif;
     color: white;
     background-color: #0052af;
@@ -34,6 +34,7 @@ body, table, div {
 table, tr {
     display: flex;
     justify-content: center;
+	font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
 h1 {
