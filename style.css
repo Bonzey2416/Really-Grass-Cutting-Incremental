@@ -4,17 +4,25 @@
 	size-adjust: 120%;
 }
 
+@import url(https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Montserrat:400,700|Poppins|Space+Mono:400,400i,700,700i);
+@import url(https://fontlibrary.org/face/segment7);
+@font-face {font-family: "Google Sans"; font-weight: normal; font-style: normal; src: url("//db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.eot"); src: url("//db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.woff") format("woff"), url("//db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/000be6a5acfcd4e4a425e9f1bb6c80f0.svg#Google Sans") format("svg"); }
+@font-face {font-family: "Google Sans"; font-weight: normal; font-style: italic; src: url("//db.onlinewebfonts.com/t/69b6dafcd18436d717d1c4a71c4eb6b1.eot"); src: url("//db.onlinewebfonts.com/t/69b6dafcd18436d717d1c4a71c4eb6b1.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/69b6dafcd18436d717d1c4a71c4eb6b1.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/69b6dafcd18436d717d1c4a71c4eb6b1.woff") format("woff"), url("//db.onlinewebfonts.com/t/69b6dafcd18436d717d1c4a71c4eb6b1.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/69b6dafcd18436d717d1c4a71c4eb6b1.svg#Google Sans") format("svg"); }
+@font-face {font-family: "Google Sans"; font-weight: 500; font-style: normal; src: url("//db.onlinewebfonts.com/t/0e3f1c9efebea39cb811fbb86c2fc53f.eot"); src: url("//db.onlinewebfonts.com/t/0e3f1c9efebea39cb811fbb86c2fc53f.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/0e3f1c9efebea39cb811fbb86c2fc53f.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/0e3f1c9efebea39cb811fbb86c2fc53f.woff") format("woff"), url("//db.onlinewebfonts.com/t/0e3f1c9efebea39cb811fbb86c2fc53f.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/0e3f1c9efebea39cb811fbb86c2fc53f.svg#Google Sans Medium") format("svg"); }
+@font-face {font-family: "Google Sans"; font-weight: 500; font-style: italic; src: url("//db.onlinewebfonts.com/t/d2e7466051a55d11378042f258e951c1.eot"); src: url("//db.onlinewebfonts.com/t/d2e7466051a55d11378042f258e951c1.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/d2e7466051a55d11378042f258e951c1.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/d2e7466051a55d11378042f258e951c1.woff") format("woff"), url("//db.onlinewebfonts.com/t/d2e7466051a55d11378042f258e951c1.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/d2e7466051a55d11378042f258e951c1.svg#Google Sans Medium") format("svg"); }
+@font-face {font-family: "Google Sans"; font-weight: bold; font-style: normal; src: url("//db.onlinewebfonts.com/t/371213c6129c24324f5aa2e2e61319af.eot"); src: url("//db.onlinewebfonts.com/t/371213c6129c24324f5aa2e2e61319af.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/371213c6129c24324f5aa2e2e61319af.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/371213c6129c24324f5aa2e2e61319af.woff") format("woff"), url("//db.onlinewebfonts.com/t/371213c6129c24324f5aa2e2e61319af.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/371213c6129c24324f5aa2e2e61319af.svg#Google Sans") format("svg"); }
+@font-face {font-family: "Google Sans"; font-weight: bold; font-style: italic; src: url("//db.onlinewebfonts.com/t/b51a2098e785c5323cb72f371ca0cde7.eot"); src: url("//db.onlinewebfonts.com/t/b51a2098e785c5323cb72f371ca0cde7.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/b51a2098e785c5323cb72f371ca0cde7.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/b51a2098e785c5323cb72f371ca0cde7.woff") format("woff"), url("//db.onlinewebfonts.com/t/b51a2098e785c5323cb72f371ca0cde7.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/b51a2098e785c5323cb72f371ca0cde7.svg#Google Sans") format("svg"); }
+@font-face {font-family: "Google Sans Text"; font-weight: normal; font-style: normal; src: url("//db.onlinewebfonts.com/t/41cdafd19e156a1f74759f9c88b878ff.eot"); src: url("//db.onlinewebfonts.com/t/41cdafd19e156a1f74759f9c88b878ff.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/41cdafd19e156a1f74759f9c88b878ff.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/41cdafd19e156a1f74759f9c88b878ff.woff") format("woff"), url("//db.onlinewebfonts.com/t/41cdafd19e156a1f74759f9c88b878ff.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/41cdafd19e156a1f74759f9c88b878ff.svg#Google Sans Text") format("svg"); }
+@font-face {font-family: "Google Sans Text"; font-weight: bold; font-style: normal; src: url("//db.onlinewebfonts.com/t/6a8dc683d1b4db924a75e5a0e3ed8410.eot"); src: url("//db.onlinewebfonts.com/t/6a8dc683d1b4db924a75e5a0e3ed8410.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/6a8dc683d1b4db924a75e5a0e3ed8410.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/6a8dc683d1b4db924a75e5a0e3ed8410.woff") format("woff"), url("//db.onlinewebfonts.com/t/6a8dc683d1b4db924a75e5a0e3ed8410.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/6a8dc683d1b4db924a75e5a0e3ed8410.svg#Google Sans Text Medium") format("svg"); }
+
 * {
-	font-family: Inconsolata;
+	
     table-align: center;
 	text-align: center;
-
-    text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px, 
-    #000 0px 0px 2px, #000 0px 0px 2px, #000 0px 0px 2px, 
-    #000 0px 0px 3px, #000 0px 0px 3px, #000 0px 0px 3px;
 }
 
 body {
+	font-family: Roboto, 'Helvetica Neue', sans-serif;
     color: white;
     background-color: #0052af;
 	overflow: hidden;
@@ -51,6 +59,7 @@ button {
     color: white;
     cursor: pointer;
     padding: 4px 10px;
+    font-family: 'Google Sans Text', Roboto, 'Helvetica Neue', sans-serif;
 }
 
 button.locked {
@@ -117,6 +126,7 @@ button:not(.locked):hover {
     width: calc(100% - 170px);
     height: calc(100% - 220px);
     transform: translateX(-50%) translateY(calc(-50% + 25px));
+    font-family: 'Google Sans Text', Roboto, 'Helvetica Neue', sans-serif;
 
     background-color: #fff2;
     padding: 10px;
