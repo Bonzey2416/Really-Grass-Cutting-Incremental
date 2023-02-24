@@ -37,25 +37,25 @@ const UPGS = {
 
         ctn: [
             {
-                max: 1000,
+                max: 4096,
 
                 title: "Grass Value",
-                desc: `Increase Grass gain by <b class="green">1</b> per level.<br>This effect is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+                desc: `Increase Grass gain by <b class="green">1</b> per level.<br>This effect is <b class="green">doubled</b> every <b class="yellow">10</b> levels.`,
 
                 res: "grass",
                 icon: ['Curr/Grass'],
                 
-                cost: i => Decimal.pow(1.2,i).mul(10).ceil(),
-                bulk: i => i.div(10).max(1).log(1.2).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.1,i).mul(10).ceil(),
+                bulk: i => i.div(10).max(1).log(1.1).floor().toNumber()+1,
 
                 effect(i) {
-                    let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+                    let x = Decimal.pow(2,Math.floor(i/10)).mul(i+1)
 
                     return x
                 },
                 effDesc: x => x.format()+"x",
             },{
-                max: 1000,
+                max: 2048,
 
                 title: "More Grass",
                 desc: `Increase grass cap by <b class="green">1</b> per level.`,
@@ -63,8 +63,8 @@ const UPGS = {
                 res: "grass",
                 icon: ['Icons/MoreGrass'],
                 
-                cost: i => Decimal.pow(1.4,i).mul(25).ceil(),
-                bulk: i => i.div(25).max(1).log(1.4).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.15,i).mul(15).ceil(),
+                bulk: i => i.div(15).max(1).log(1.15).floor().toNumber()+1,
 
                 effect(i) {
                     let x = i
@@ -73,7 +73,7 @@ const UPGS = {
                 },
                 effDesc: x => "+"+format(x,0),
             },{
-                max: 250,
+                max: 1024,
 
                 title: "Grow Speed",
                 desc: `Increase grass grow speed by <b class="green">10%</b> per level.`,
@@ -81,8 +81,8 @@ const UPGS = {
                 res: "grass",
                 icon: ['Icons/Speed'],
                 
-                cost: i => Decimal.pow(1.75,i).mul(100).ceil(),
-                bulk: i => i.div(100).max(1).log(1.75).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.3,i).mul(30).ceil(),
+                bulk: i => i.div(30).max(1).log(1.3).floor().toNumber()+1,
 
                 effect(i) {
                     let x = i/10+1
@@ -91,25 +91,25 @@ const UPGS = {
                 },
                 effDesc: x => format(x)+"x",
             },{
-                max: 1000,
+                max: 65536,
 
                 title: "XP",
-                desc: `Increase experience (XP) gained by <b class="green">1</b> per level.<br>This effect is <b class="green">doubled</b> every <b class="yellow">25</b> levels.`,
+                desc: `Increase experience (XP) gained by <b class="green">1</b> per level.<br>This effect is <b class="green">doubled</b> every <b class="yellow">10</b> levels.`,
 
                 res: "grass",
                 icon: ['Icons/XP'],
                 
-                cost: i => Decimal.pow(1.3,i).mul(1e3).ceil(),
-                bulk: i => i.div(1e3).max(1).log(1.3).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.01,i).mul(100).ceil(),
+                bulk: i => i.div(100).max(1).log(1.01).floor().toNumber()+1,
 
                 effect(i) {
-                    let x = Decimal.pow(2,Math.floor(i/25)).mul(i+1)
+                    let x = Decimal.pow(2,Math.floor(i/10)).mul(i+1)
 
                     return x
                 },
                 effDesc: x => x.format()+"x",
             },{
-                max: 5,
+                max: 20,
 
                 title: "Range",
                 desc: `Increase grass cut range by <b class="green">10</b> per level. Base is 50.`,
@@ -117,8 +117,8 @@ const UPGS = {
                 res: "grass",
                 icon: ['Icons/Range'],
                 
-                cost: i => Decimal.pow(2,i).mul(1e4).ceil(),
-                bulk: i => i.div(1e4).max(1).log(2).floor().toNumber()+1,
+                cost: i => Decimal.pow(2,i).mul(1000).ceil(),
+                bulk: i => i.div(1000).max(1).log(2).floor().toNumber()+1,
 
                 effect(i) {
                     let x = i*10
@@ -142,7 +142,7 @@ const UPGS = {
 
         ctn: [
             {
-                max: 50,
+                max: 65536,
 
                 costOnce: true,
 
@@ -162,7 +162,7 @@ const UPGS = {
                 },
                 effDesc: x => x.format()+"x",
             },{
-                max: 10,
+                max: 16384,
 
                 costOnce: true,
 
@@ -182,7 +182,7 @@ const UPGS = {
                 },
                 effDesc: x => "+"+format(x,0),
             },{
-                max: 10,
+                max: 65536,
 
                 costOnce: true,
 
@@ -202,7 +202,7 @@ const UPGS = {
                 },
                 effDesc: x => format(x)+"x",
             },{
-                max: 50,
+                max: 65536,
 
                 costOnce: true,
 
@@ -224,7 +224,7 @@ const UPGS = {
                 },
                 effDesc: x => x.format()+"x",
             },{
-                max: 5,
+                max: 20,
 
                 costOnce: true,
 
@@ -244,7 +244,7 @@ const UPGS = {
                 },
                 effDesc: x => "+"+format(x,0),
             },{
-                max: 1,
+                max: 256,
 
                 costOnce: true,
 
@@ -264,7 +264,7 @@ const UPGS = {
                 },
                 effDesc: x => "+"+format(x,0),
             },{
-                max: 10,
+                max: 65536,
 
                 unl: _=>player.cTimes>0,
 
@@ -286,7 +286,7 @@ const UPGS = {
                 },
                 effDesc: x => x.format()+"x",
             },{
-                max: 25,
+                max: 65536,
 
                 unl: _=>player.cTimes>0,
 
@@ -308,7 +308,7 @@ const UPGS = {
                 },
                 effDesc: x => x.format()+"x",
             },{
-                max: 25,
+                max: 65536,
 
                 unl: _=>player.cTimes>0,
 
@@ -348,8 +348,8 @@ const UPGS = {
                 res: "grass",
                 icon: ['Curr/Grass','Icons/Automation'],
                             
-                cost: i => Decimal.pow(10,i).mul(1e3).ceil(),
-                bulk: i => i.div(1e3).max(1).log(10).floor().toNumber()+1,
+                cost: i => Decimal.pow(2,i).mul(1e3).ceil(),
+                bulk: i => i.div(1e3).max(1).log(2).floor().toNumber()+1,
             
                 effect(i) {
                     let x = Math.max(i-1,0)
@@ -359,7 +359,7 @@ const UPGS = {
                 effDesc: x => format(tmp.autocut)+" seconds",
             },{
                 unl: _=>player.pTimes>0,
-                max: 5,
+                max: 2097152,
 
                 title: "Autocut Value",
                 desc: `Auto cuts grass is worth <b class="green">+100%</b> more grass, XP & TP.`,
@@ -367,8 +367,8 @@ const UPGS = {
                 res: "pp",
                 icon: ['Curr/Grass'],
                             
-                cost: i => Decimal.pow(3,i).mul(20).ceil(),
-                bulk: i => i.div(20).max(1).log(3).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.1,i).mul(10).ceil(),
+                bulk: i => i.div(10).max(1).log(1.1).floor().toNumber()+1,
             
                 effect(i) {
                     let x = E(i+1)
@@ -378,7 +378,7 @@ const UPGS = {
                 effDesc: x => format(x)+"x",
             },{
                 unl: _=>player.pTimes>0,
-                max: 3,
+                max: 256,
 
                 title: "Autocut Amount",
                 desc: `Increases auto cut amount by <b class="green">1</b>.`,
@@ -386,8 +386,8 @@ const UPGS = {
                 res: "pp",
                 icon: ['Curr/Grass','Icons/Automation'],
                             
-                cost: i => Decimal.pow(5,i).mul(25).ceil(),
-                bulk: i => i.div(25).max(1).log(5).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.2,i).mul(20).ceil(),
+                bulk: i => i.div(20).max(1).log(1.2).floor().toNumber()+1,
             
                 effect(i) {
                     let x = i
@@ -505,7 +505,7 @@ const UPGS = {
             },{
                 unl: _=>player.grasshop>=4,
 
-                max: 10,
+                max: 65536,
 
                 title: "Crystal Generation",
                 desc: `Passively generate <b class="green">1%</b> of crystal you would earn on crystallize per second.`,
@@ -513,8 +513,8 @@ const UPGS = {
                 res: "pp",
                 icon: ['Curr/Crystal','Icons/Automation'],
                             
-                cost: i => Decimal.pow(2,i).mul(1e42).ceil(),
-                bulk: i => i.div(1e42).max(1).log(2).floor().toNumber()+1,
+                cost: i => Decimal.pow(1.1,i).mul(1e42).ceil(),
+                bulk: i => i.div(1e42).max(1).log(1.1).floor().toNumber()+1,
                 effect(i) {
                     let x = i/100
             
